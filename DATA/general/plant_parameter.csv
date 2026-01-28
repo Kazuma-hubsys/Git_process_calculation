@@ -1,0 +1,7 @@
+﻿Parameter,Unit,Value
+Plant_operation_time,h/y,8000
+Plant_lifetime,y,20
+Discount_rate,,0.08
+Total_plant_cost,%_of_PPC,130
+Total_capital_requirement,%_of_TPC,110
+Operation_and_maintenance_cost,%_of_TCR,4

@@ -1,0 +1,10 @@
+﻿Process,Base_scale,Unit,Base_cost,Scaling_factor,Year
+Coking,1.9,Mt-coke/y,529,0.83,2017
+Sintering,6.6,Mt-sinter/y,572,1,2017
+ASU,1839,t-O2/d,40,0.7,2017
+BF,2.8,Mt-pig-iron/y,659,1,2017
+COREX,1,Mt-pig-iron/y,248,1,2017
+Hisarna,1,Mt-pig-iron/y,350,0.67,2017
+DRI,2,Mt-iron-sponge/y,474,0.67,2017
+BOF,2.8,Mt-CS/y,410,1,2017
+EAF,2,Mt-CS/y,379,0.67,2017

@@ -1,0 +1,8 @@
+﻿Truck,Unit,Value,Citation
+Lifetime,y,12,
+Discount_rate,-,0.08,
+Load,t,2.6,Kanai_2010
+CAPEX,USD,220000,IEA_2020
+OPEX,USD/y,26400,IEA_2020
+Average_speed,km/h,50,Kanai_2010
+Cf,L-fuel/km,0.149,国土交通省自動車燃料消費量調査_202510

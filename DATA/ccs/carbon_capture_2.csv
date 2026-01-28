@@ -1,0 +1,5 @@
+﻿Process,Base_scale,Unit_base_scale,Base_cost,Unit_Base_cost,Scaling_factor,Capture_ratio,Spec_electricity_use,Unit_electricity_use,Sepc_heat_use,Unit_heat_use
+FGD,18.1,Kmols_of_feed/s,65,million_€2013,0.8,,,,,
+capture_MDEA,225,t-CO2/h,0.72,million_€2013,0.8,,,,,
+CO2_conditioning_small,266.6,,0.21,,0.6,,,,,
+CO2_conditioning,560,t-CO2/h,0.06,million_€2013,1,,,,,

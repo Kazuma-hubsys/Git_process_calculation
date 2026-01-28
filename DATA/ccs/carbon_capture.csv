@@ -1,0 +1,8 @@
+﻿Process,Base_scale,Unit_base_scale,Base_cost,Unit_Base_cost,Scaling_factor,Capture_ratio,Spec_electricity_use,Unit_electricity_use,Sepc_heat_use,Unit_heat_use,Year,Citation
+MEA,1,Mt-CO2-captured/y,115.985646,million_USD,0.67,0.89,0.78,GJ_e/t-CO2,4.4,GJ_e/t-CO2,2021,Yang
+VPSA,2.6,Mt-CO2-captured/y,188.180793,million_USD,1,0.88,0.94,GJ_e/t-CO2,,GJ_e/t-CO2,2021,Yang
+MDEA,0.23,Mt-CO2-captured/y,16.9244361,million_USD,0.67,,,GJ_e/t-CO2,,GJ_e/t-CO2,2021,Yang
+Selexol,1,Mt-CO2-captured/y,140.839713,million_USD,0.67,0.9,0.6,GJ_e/t-CO2,0.63,GJ_e/t-CO2,2021,Yang
+Oxy-fuel_combustion,1,Mt-CO2-captured/y,48.524607,million_USD,0.67,0.87,1.6,GJ_e/t-CO2,,GJ_e/t-CO2,2021,Yang
+Pre-combustion,1,Mt-CO2-captured/y,50.891661,million_USD,0.67,0.95,0.34,GJ_e/t-CO2,1.97,GJ_e/t-CO2,2021,Yang
+Integrated_CaL,0.94,Mt-CO2-captured/y,26.037594,million_USD,1,0.95,0.87,GJ_e/t-CO2,,GJ_e/t-CO2,2021,Yang

@@ -1,0 +1,8 @@
+Process,Base_cost,Base_scale,Unit,Scaling_factor,Year,Citation
+Stack_capex,404477.669,1,MW,0.988,2019,Sota
+Electronics,186100,1,MW,1,2019,Sota
+Purification,522055.547,1,MW,0.272,2019,Sota
+Heat_management,182596.89,1,MW,0.198,2019,Sota
+Compression,558122.678,1,MW,0.488,2019,Sota
+Contingency,402000.123,1,MW,0.884,2019,Sota
+Pump,689914,2.37E+05,kg-H2O/h,0.6,2024,Anwar_2025

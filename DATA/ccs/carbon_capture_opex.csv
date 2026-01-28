@@ -1,0 +1,6 @@
+﻿Process,Unit,Value,Citation,Year
+Electricity,kWh/kg-captured,0.12806,Jing,2013
+Water,kg/kg-captured,0.108,Tsupari,2013
+MEA_regeneration,MJ/kg-captured,3.4,Tsupari,2013
+MEA_makeup_consumption,kg/t-captured,1.5,Tsupari,2013
+MEA_makeup_cost,USD/kg,1.328137,Tsupari,2013
