@@ -1,6 +1,6 @@
-from .config import bio_infra_assump_data, bio_gather_cost_data, bio_capex_data, truck_data
+from .config import bio_infra_assump_data, bio_gather_cost_data, bio_capex_data, bio_hydrogen_requirement_data, truck_data
 import numpy as np
-from .general_calculation import annual_cost_calculation
+from .general_calculation import annual_cost_calculation, capex_calculation
 from .infra_calculation import truck_capex, truck_opex
 
 #############################
@@ -94,7 +94,22 @@ def bio_process_cost(biomass_processing_rate):
 
 # biomass to hydrogen
 
-def bio_hydrogen_requirement(hydrogen_production_rate): # [kt-H2 / y]
-    
+def bio_hydrogen_requirement(hydrogen_production_rate, type="wood"): # (wood / maize / ), [kt-H2 / y]
+    req_data = bio_hydrogen_requirement_data
+    if type == "wood":
+        req = req_data.Wood.Value # [kg-(wet wood chips) / kg-H2]
+    elif type == "maize":
+        req = req_data.Maize_silage.Value # [kg-(wet maize silage) / kg-H2]
+    else:
+        raise ValueError("Biomass type does not exist. Type \"wood\" is used instead.")
+    req = req * hydrogen_production_rate # [kt-bio / y]
+    return req # [kt-bio / y]
 
 def bio_hydrogen_capex(hydrogen_production_rate): # [kt-H2 / y]
+    pr = hydrogen_production_rate # [kt-H2 / y]
+    req = bio_hydrogen_requirement(pr, type="wood")
+    capex_gasif = capex_calculation(bio_capex_data.Gasifier, req)
+    capex_wgs = capex_calculation(bio_capex_data.WGS, pr)
+    capex_psa = capex_calculation(bio_capex_data.PSA, pr)
+    capex = sum([capex_gasif, capex_wgs, capex_psa])
+    return capex

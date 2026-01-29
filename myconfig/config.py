@@ -44,6 +44,7 @@ we_data = ["awe_data", "pemwe_data", "awe_adv_data", "pemwe_adv_data"]
 bio_infra_assump_data = load_csv(DATA_DIR / "biomass" / "biomass_infra_assumption.csv")
 bio_gather_cost_data = load_csv(DATA_DIR / "biomass" / "biomass_gathering_cost.csv")
 bio_capex_data = load_csv(DATA_DIR / "biomass_cost.csv")
-biomass_data = ["bio_infra_assump_data", "bio_gather_cost_data", "bio_capex_data"]
+bio_hydrogen_requirement_data = load_csv(DATA_DIR / "biomass_requirement_hydrogen.csv")
+biomass_data = ["bio_infra_assump_data", "bio_gather_cost_data", "bio_capex_data", "bio_hydroen_requirement_data"]
 
 __all__ = general_data + infra_data + process_data + ccs_data + we_data + biomass_data
