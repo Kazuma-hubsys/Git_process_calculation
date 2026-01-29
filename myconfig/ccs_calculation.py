@@ -1,4 +1,4 @@
-from .config import *
+from .config import plant_data, cc_data, cc_opex_data, commodity_data, ppi_us_dict
 import numpy as np
 from .general_calculation import capex_calculation, annual_cost_calculation, installation_cost
 from .infra_calculation import dist_pipe_capex, dist_pipe_opex, dist_pipe_cost
@@ -40,6 +40,27 @@ def ccs_cost_check(capturing_rate): # capturing rate: [Mt-CO2-captured / y]
     annual_cost = co2_capture_cost(cr)  # [million USD / y]
     cost_of_co2_captured = (annual_cost * 1e6) / (cr * 1e6) # [USD / t-captured]
     return cost_of_co2_captured # [USD / t-captured]
+
+# CO2 transport (compression & piping) # from global CCS, Advancements in CCS Technologies and Costs, 2025
+
+def co2_compression_capex(capturing_rate, N_train=1): # [Mt-CO2-captured / y]
+    Mt = capturing_rate * 1e9 / (plant_data.Plant_operation_time.Value * 3600) # CO2 flow rate [kg /s]
+    P_cut_off = 73.8 # compressor outlet pressure [bar]
+    P_initial = 1.0 # compressor inlet pressure [bar]
+    PPI_US_2005 = ppi_us_dict[2005]
+    PPI_US_2023 = ppi_us_dict[2023]
+    capex = Mt * N_train * (0.13 * 1e6 * (Mt ** (-0.71)) + 1.40 * 1e6 * (Mt ** (-0.60)) * np.log(P_cut_off / P_initial)) * (PPI_US_2023 / PPI_US_2005) * 1e-6 # [million USD]
+    return capex # [million USD]
+
+def co2_pump_capex(capturing_rate): # [Mt-CO2-captured / y]
+    Wp = capturing_rate * 1e6 / (plant_data.Plant_operation_time.Value * 24) # [t/d]
+    capex = 1.11 * 1e6 * (Wp / 1000) * 7e4 * (ppi_us_dict[2023] / ppi_us_dict[2005]) * 1e-6 # [million USD]
+    return capex # [million USD]
+
+def co2_compression_opex(capturing_rate): # [Mt-CO2-captured / y]
+
+def ccs_transport_capex(capturing_rate):
+
 
 # storage
 def co2_storage_capex(capturing_rate):
