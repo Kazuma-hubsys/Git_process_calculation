@@ -49,8 +49,10 @@ bio_infra_assump_data = load_csv(DATA_DIR / "biomass" / "biomass_infra_assumptio
 bio_gather_cost_data = load_csv(DATA_DIR / "biomass" / "biomass_gathering_cost.csv")
 bio_capex_data = load_csv(DATA_DIR / "biomass" / "biomass_cost.csv")
 bio_hydrogen_requirement_data = load_csv(DATA_DIR / "biomass" / "biomass_requirement_hydrogen.csv")
+wood_property_data = load_csv(DATA_DIR / "biomass" / "wood_physical_property.csv")
+maize_property_data = load_csv(DATA_DIR / "biomass" / "maize_physical_property.csv")
 
-biomass_data = ["bio_infra_assump_data", "bio_gather_cost_data", "bio_capex_data", "bio_hydrogen_requirement_data"]
+biomass_data = ["bio_infra_assump_data", "bio_gather_cost_data", "bio_capex_data", "bio_hydrogen_requirement_data", "wood_property_data", "maize_property_data"]
 
 
 #########

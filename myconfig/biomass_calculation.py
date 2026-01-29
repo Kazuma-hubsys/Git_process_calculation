@@ -1,4 +1,4 @@
-from .config import bio_infra_assump_data, bio_gather_cost_data, bio_capex_data, bio_hydrogen_requirement_data, truck_data
+from .config import bio_infra_assump_data, bio_gather_cost_data, bio_capex_data, bio_hydrogen_requirement_data, truck_data, wood_property_data, maize_property_data
 import numpy as np
 from .general_calculation import annual_cost_calculation, capex_calculation
 from .infra_calculation import truck_capex, truck_opex
@@ -97,13 +97,15 @@ def bio_process_cost(biomass_processing_rate):
 def bio_hydrogen_requirement(hydrogen_production_rate, type="wood"): # (wood / maize / ), [kt-H2 / y]
     req_data = bio_hydrogen_requirement_data
     if type == "wood":
-        req = req_data.Wood.Value # [kg-(wet wood chips) / kg-H2]
+        req = req_data.Wood.Value * hydrogen_production_rate # [kt-(wet wood chips) / y]
+        req_kj = req * wood_property_data.LHV.Value * 1e6 * 1e-9 # [PJ-(wet wood chips) / y]
     elif type == "maize":
-        req = req_data.Maize_silage.Value # [kg-(wet maize silage) / kg-H2]
+        req = req_data.Maize_silage.Value * hydrogen_production_rate # [kt-(wet maize silage) / y]
+        req_kj = req * maize_property_data.LHV.Value * 1e6 * 1e-9 # [PJ-(wet maize silage) / y]
     else:
         raise ValueError("Biomass type does not exist. Type \"wood\" is used instead.")
-    req = req * hydrogen_production_rate # [kt-bio / y]
-    return req # [kt-bio / y]
+    
+    return req_kj # [PJ-bio / y]
 
 def bio_hydrogen_capex(hydrogen_production_rate, biomass_type="wood"): # [kt-H2 / y]
     pr = hydrogen_production_rate # [kt-H2 / y]
