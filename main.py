@@ -111,4 +111,15 @@ def biomass_hydrogen_capex_check():
     capex = bio_hydrogen_capex(pr)
     print(f"Production rate: {pr} kt-H2 / y\nCAPEX for hydrogen production from wood chip: {capex} million USD")
 
+    pr = np.linspace(0, 5, 100)
+    capex = bio_hydrogen_capex(pr)
+    x_list = pr
+    y_list = [capex]
+    x_scat = [90 * 1e-6 * 8000]
+    y_scat = [11]
+    x_label = "Hydrogen production scale [kt-H2/y]"
+    y_label = "CAPEX [million USD]"
+    title = "CAPEX for hydrogen production from wood chips"
+    plot_line_and_scatter(x_list, y_list, x_scat=x_scat, y_scat=y_scat, x_label=x_label, y_label=y_label, title=title)
+
 biomass_hydrogen_capex_check()

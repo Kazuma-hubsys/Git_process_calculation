@@ -1,14 +1,7 @@
 ﻿Wood,Value,Unit,Citation
-C,0.494,kg/kg-(dry_wood_chips),Yao_2017
-H,0.06,kg/kg-(dry_wood_chips),Yao_2017
-N,0.002,kg/kg-(dry_wood_chips),
-O,0.435,kg/kg-(dry_wood_chips),
-Ash,0.009,kg/kg-(dry_wood_chips),
-LHV,18.3,MJ/kg-(dry_wood_chips),
-,,,
-,,,
-,,,
-,,,
-,,,
-,,,
-,,,
+C,0.494 ,kg/kg-(dry_wood_chips),Yao_2017
+H,0.060 ,kg/kg-(dry_wood_chips),Yao_2017
+N,0.002 ,kg/kg-(dry_wood_chips),
+O,0.435 ,kg/kg-(dry_wood_chips),
+Ash,0.009 ,kg/kg-(dry_wood_chips),
+LHV,18.3 ,MJ/kg-(dry_wood_chips),

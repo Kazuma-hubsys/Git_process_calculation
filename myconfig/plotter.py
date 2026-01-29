@@ -58,7 +58,7 @@ def save_figure(title, save_dir):
 ## Line plot ##
 ###############
 
-def plot_line(x, y_list, legend_label=[], x_label="x", y_label="y", title="title", save_dir="plots", legend_on=True):
+def plot_line(x, y_list, legend_label=[], x_label="x", y_label="y", title="title", save_dir="plots"):
     ax = make_ax(x_label, y_label, title)
     if not legend_label:
         legend_label = [str(i) for i in range(len(y_list))]
@@ -67,7 +67,7 @@ def plot_line(x, y_list, legend_label=[], x_label="x", y_label="y", title="title
        y = y_list[i]
        label = legend_label[i]
        ax.plot(x, y, label=label)
-    if legend_on:
+    if len(y_list) > 1:
         ax.legend(bbox_to_anchor=(1.01, 0.5), loc="center left", frameon=False)
 
     print(f"Plotted: {title}")
@@ -134,18 +134,20 @@ def plot_scatter(x, y, x_label="x", y_label="y", title="title", save_dir="plots"
 ## Combination plot ##
 ######################
 
-def plot_line_and_scatter(x_line, y_line, x_scat, y_scat, legend_label=[],  x_label="x", y_label="y", title="title", save_dir="plots", legend_on=True):
+def plot_line_and_scatter(x_list, y_list, x_scat, y_scat, legend_label=[],  x_label="x", y_label="y", title="title", save_dir="plots"):
     ax = make_ax(x_label, y_label, title)
-    if legend_on and (not legend_label):
-        legend_label = [str(i) for i in range(len(y_line))]
+    if not legend_label:
+        legend_label = [str(i) for i in range(len(y_list))]
 
     ax.scatter(x_scat, y_scat)
 
-    for i in range(len(y_line)):
-       y = y_line[i]
+    for i in range(len(y_list)):
+       y = y_list[i]
        label = legend_label[i]
-       ax.plot(x_line, y, label=label)
-    ax.legend(bbox_to_anchor=(1.01, 0.5), loc="center left", frameon=False)
+       ax.plot(x_list, y, label=label)
+    
+    if len(y_list) > 1:
+        ax.legend(bbox_to_anchor=(1.01, 0.5), loc="center left", frameon=False)
 
     print(f"Plotted: {title}")
     save_figure(title, save_dir)
@@ -157,6 +159,10 @@ if __name__ == "__main__":
     # y_list = [np.sin(x), np.cos(x)]
     # legend_label = ["sin(x)", "cos(x)"]
     # plot_line(x, y_list, legend_label=legend_label)
+    x = np.linspace(- 2 * np.pi, 2 * np.pi, 100)
+    y_list = [np.sin(x)]
+    legend_label = ["sin(x)"]
+    plot_line(x, y_list, legend_label=legend_label)
 
     # x = np.linspace(- 2 * np.pi, 2 * np.pi, 100)
     # y_list = [np.sin(x), np.cos(x)]
@@ -168,6 +174,6 @@ if __name__ == "__main__":
     # y_list = np.array([5, 3, 7, 4, 6])
     # plot_bar(y_list)
 
-    # 各barが異なるリストの値を積み上げる
-    y_list = [[2, 1, 3], [1, 4, 2], [3, 2, 1], [2, 3, 2]]
-    plot_stack_bar(y_list)
+    # # 各barが異なるリストの値を積み上げる
+    # y_list = [[2, 1, 3], [1, 4, 2], [3, 2, 1], [2, 3, 2]]
+    # plot_stack_bar(y_list)
