@@ -1,4 +1,4 @@
-from .config import bio_infra_assump_data, bio_gather_cost_data, truck_data
+from .config import bio_infra_assump_data, bio_gather_cost_data, bio_capex_data, truck_data
 import numpy as np
 from .general_calculation import annual_cost_calculation
 from .infra_calculation import truck_capex, truck_opex
@@ -82,7 +82,8 @@ def bio_trans_cost(biomass_amount, r=bio_infra_assump_data.r.Value): # L, D, S, 
 
 # processing
 
-def bio_process_capex(biomass_processing_rate): 
+def bio_process_capex(biomass_processing_rate): # [kt-bio / y]
+
     return True
 
 def bio_process_opex(biomass_processing_rate):
@@ -91,3 +92,9 @@ def bio_process_opex(biomass_processing_rate):
 def bio_process_cost(biomass_processing_rate):
     return True
 
+# biomass to hydrogen
+
+def bio_hydrogen_requirement(hydrogen_production_rate): # [kt-H2 / y]
+    
+
+def bio_hydrogen_capex(hydrogen_production_rate): # [kt-H2 / y]
