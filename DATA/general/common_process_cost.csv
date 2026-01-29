@@ -1,0 +1,6 @@
+Process,Base_scale,Unit_base_scale,Base_cost,Unit_Base_cost,Scaling_factor,Year,Citation
+WGS,141,kt-H2/y,7.7,M$,0.67,2017,Yang_2021
+PSA,141,kt-H2/y,83.6,M$,0.67,2017,Yang_2021
+SMR,141,kt-H2/y,60.5,M$,0.67,2017,Yang_2021
+CLR,237.7,kt-H2/y,15.4,M$,0.67,2017,Yang_2021
+ASU,1839,t-O2/d,44,M$,0.7,2012,Yang_2021

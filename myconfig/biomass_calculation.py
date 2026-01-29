@@ -1,4 +1,4 @@
-from .config import bio_infra_assump_data, bio_gather_cost_data, bio_capex_data, bio_hydrogen_requirement_data, truck_data, wood_property_data, maize_property_data
+from .config import bio_infra_assump_data, bio_gather_cost_data, bio_capex_data, bio_hydrogen_requirement_data, truck_data, wood_property_data, maize_property_data, common_process_cost_data
 import numpy as np
 from .general_calculation import annual_cost_calculation, capex_calculation
 from .infra_calculation import truck_capex, truck_opex
@@ -111,7 +111,7 @@ def bio_hydrogen_capex(hydrogen_production_rate, biomass_type="wood"): # [kt-H2 
     pr = hydrogen_production_rate # [kt-H2 / y]
     req = bio_hydrogen_requirement(pr, biomass_type)
     capex_gasif = capex_calculation(bio_capex_data.Gasifier, req)
-    capex_wgs = capex_calculation(bio_capex_data.WGS, pr)
-    capex_psa = capex_calculation(bio_capex_data.PSA, pr)
+    capex_wgs = capex_calculation(common_process_cost_data.WGS, pr)
+    capex_psa = capex_calculation(common_process_cost_data.PSA, pr)
     capex = sum([capex_gasif, capex_wgs, capex_psa]) # [million USD]
     return capex # [million USD]

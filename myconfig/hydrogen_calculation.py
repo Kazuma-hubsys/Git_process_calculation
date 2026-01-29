@@ -1,4 +1,4 @@
-from .config import awe_data, awe_adv_data, pemwe_data, pemwe_adv_data, equipment_data
+from .config import awe_data, awe_adv_data, pemwe_data, pemwe_adv_data, equipment_cost_data
 import numpy as np
 
 from .general_calculation import capex_calculation, annual_cost_calculation
@@ -55,7 +55,7 @@ def water_pump_requirement(production_scale, electricity_use=50, eta=0.99): # hy
 def water_pump_capex(production_scale, electricity_use=50, eta=0.99): # hydrogen production scale [MW], electricity_use: 50 [kWh / kg-H2], eta: Faraday efficiency: 0.99 [-]
     water_requirement = water_pump_requirement(production_scale, electricity_use, eta)
     
-    prm = equipment_data.Pump
+    prm = equipment_cost_data.Pump
     capex = capex_calculation(prm, production_scale) * 1e-6 # [million USD]
     return capex # [million USD]
 

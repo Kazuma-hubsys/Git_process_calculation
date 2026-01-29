@@ -28,8 +28,8 @@ from .biomass_calculation import bio_trans_infra, bio_gather_cost, bio_trans_cos
 biomass_list = ["bio_trans_infra", "bio_gather_cost", "bio_trans_cost", "bio_hydrogen_capex"]
 
 # data set
-from .config import equipment_costs, ccs_data_merged
-data_list = ["equipment_costs", "ccs_data_merged"]
+from .config import ccs_data_merged
+data_list = ["ccs_data_merged"]
 
 # tool
 from .plotter import plot_line, plot_bar, plot_scatter, plot_line_and_scatter

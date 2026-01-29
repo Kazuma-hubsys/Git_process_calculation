@@ -10,17 +10,16 @@ DATA_DIR = Path(__file__).resolve().parent.parent / "DATA"
 cepci_dict = load_csv_as_dict(DATA_DIR / "general" / "CEPCI.csv")
 plant_data = load_csv(DATA_DIR / "general" / "plant_parameter.csv")
 commodity_data = load_csv(DATA_DIR / "general" / "commodity_price.csv")
-equipment_costs = load_csv(DATA_DIR / "general" / "equipment_cost_parameter.csv")
+equipment_cost_data = load_csv(DATA_DIR / "general" / "equipment_cost.csv")
+common_process_cost_data = load_csv(DATA_DIR / "general" / "common_process_cost.csv")
 
-general_data = ["cepci_dict", "plant_data", "commodity_data", "equipment_costs"]
+general_data = ["cepci_dict", "plant_data", "commodity_data", "equipment_cost_data", "common_process_cost_data"]
 
 # infra
-
 pipe_data = load_csv(DATA_DIR / "infra" / "pipeline_parameter.csv")
 truck_data = load_csv(DATA_DIR / "infra" / "truck_parameter.csv")
-equipment_data = load_csv(DATA_DIR / "infra" / "equipment_parameter.csv")
 
-infra_data = ["pipe_data", "truck_data", "equipment_data"]
+infra_data = ["pipe_data", "truck_data"]
 
 # each process
 steel_data = load_csv(DATA_DIR / "steel_production.csv")
