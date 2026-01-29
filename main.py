@@ -54,10 +54,10 @@ def biomass_infra_check():
     trans_cost = bio_trans_cost(Mw) # [million USD / y]
     total_cost = gathering_cost + trans_cost # [million USD / y]
     cost_after_agri = (gathering_cost + trans_cost) * 1e6 / (Mw * 1e3) # [USD / kg]
-    # plot_line(Mw, [gathering_cost, trans_cost, total_cost], legend_label=["Gathering", "Transport", "Total"], x_label="Biomass amount [t/y]", y_label="Cost [million USD / y]", title="Biomass infra cost")
+    plot_line(Mw, [gathering_cost, trans_cost, total_cost], legend_label=["Gathering", "Transport", "Total"], x_label="Biomass amount [t/y]", y_label="Cost [million USD / y]", title="Biomass infra cost")
     plot_line(Mw, [cost_after_agri], x_label="biomass amount [t/y]", y_label="Cost after agriculture [USD / kg]", title="Cost after agriculture")
 
-""" def plot_test_ccs():
+def plot_test_ccs():
     x = np.linspace(0, 400, 100)
     y1 = 0.21 * (x / 266.6) ** 0.6 + 0.72 * (x / 225) ** 0.80
     y2 = 16.9 * (x / (0.23 * 1000000/8000)) ** 0.67
@@ -84,7 +84,7 @@ def plot_test_ccs_with_point():
 
     x_scat = [3420/24]
     y_scat = [176]
-    plot_line_and_scatter(x, y_list, x_scat, y_scat, legend_label=label_list, x_label=x_label, y_label=y_label, title=title) """
+    plot_line_and_scatter(x, y_list, x_scat, y_scat, legend_label=label_list, x_label=x_label, y_label=y_label, title=title)
 
 def plot_test_ccs_trans():
     x = np.linspace(0, 100, 100)
@@ -106,4 +106,9 @@ def steel_ccs(production_rate=100):
     print(f"\nCarbon capture plant for {pr} Mt/y")
     print(f"capex: {capex:.2f} [million USD]\nOPEX: {opex:.2f} [million USD / y]\nannual cost: {annual_cost:.2f} [million USD / y]")
 
-biomass_infra_check()
+def biomass_hydrogen_capex_check():
+    pr = 90 * 1e-6 * 8000 # [kt-H2 / y], 90 kg-H2/h
+    capex = bio_hydrogen_capex(pr)
+    print(f"Production rate: {pr} kt-H2 / y\nCAPEX for hydrogen production from wood chip: {capex} million USD")
+
+biomass_hydrogen_capex_check()

@@ -105,11 +105,11 @@ def bio_hydrogen_requirement(hydrogen_production_rate, type="wood"): # (wood / m
     req = req * hydrogen_production_rate # [kt-bio / y]
     return req # [kt-bio / y]
 
-def bio_hydrogen_capex(hydrogen_production_rate): # [kt-H2 / y]
+def bio_hydrogen_capex(hydrogen_production_rate, biomass_type="wood"): # [kt-H2 / y]
     pr = hydrogen_production_rate # [kt-H2 / y]
-    req = bio_hydrogen_requirement(pr, type="wood")
+    req = bio_hydrogen_requirement(pr, biomass_type)
     capex_gasif = capex_calculation(bio_capex_data.Gasifier, req)
     capex_wgs = capex_calculation(bio_capex_data.WGS, pr)
     capex_psa = capex_calculation(bio_capex_data.PSA, pr)
-    capex = sum([capex_gasif, capex_wgs, capex_psa])
-    return capex
+    capex = sum([capex_gasif, capex_wgs, capex_psa]) # [million USD]
+    return capex # [million USD]

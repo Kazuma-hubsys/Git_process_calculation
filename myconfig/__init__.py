@@ -24,8 +24,8 @@ from .ccs_calculation import co2_capture_capex, co2_capture_opex, co2_capture_co
 ccs_list = ["co2_capture_capex", "co2_capture_opex", "co2_capture_cost", "ccs_cost_check", "ccs_total_cost"]
 
 # biomass
-from .biomass_calculation import bio_trans_infra, bio_gather_cost, bio_trans_cost
-biomass_list = ["bio_trans_infra", "bio_gather_cost", "bio_trans_cost"]
+from .biomass_calculation import bio_trans_infra, bio_gather_cost, bio_trans_cost, bio_hydrogen_capex
+biomass_list = ["bio_trans_infra", "bio_gather_cost", "bio_trans_cost", "bio_hydrogen_capex"]
 
 # data set
 from .config import equipment_costs, ccs_data_merged
@@ -37,5 +37,4 @@ tool_list = ["plot_line", "plot_bar", "plot_scatter", "plot_line_and_scatter"]
 
 cost_calculation_list = general_list + process_list + hydrogen_list + ccs_list + infra_list + biomass_list
 
-init_list = data_list + cost_calculation_list + tool_list
-__all__ = init_list
+__all__ = data_list + cost_calculation_list + tool_list
