@@ -30,11 +30,12 @@ process_data = ["steel_data"]
 # CCS
 cc_data = load_csv(DATA_DIR / "ccs" / "carbon_capture.csv")
 cc_opex_data = load_csv(DATA_DIR / "ccs" / "carbon_capture_opex.csv")
+co2_comp_data = load_csv(DATA_DIR / "ccs" / "co2_compression.csv")
 
 ccs_data_list = [cc_data, cc_opex_data]
 ccs_data_merged = merge_dotdicts(ccs_data_list)
 
-ccs_data = ["cc_data", "cc_opex_data", "ccs_data_merged"]
+ccs_data = ["cc_data", "cc_opex_data", "ccs_data_merged", "cc_comp_data"]
 
 # Water electrolysis
 awe_data = load_csv(DATA_DIR / "electrolysis" / "AWE_parameter.csv")

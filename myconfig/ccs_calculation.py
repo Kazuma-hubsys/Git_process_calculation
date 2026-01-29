@@ -1,4 +1,4 @@
-from .config import plant_data, cc_data, cc_opex_data, commodity_data, ppi_us_dict
+from .config import plant_data, cc_data, cc_opex_data, commodity_data, ppi_us_dict, co2_comp_data
 import numpy as np
 from .general_calculation import capex_calculation, annual_cost_calculation, installation_cost
 from .infra_calculation import dist_pipe_capex, dist_pipe_opex, dist_pipe_cost
@@ -41,7 +41,7 @@ def ccs_cost_check(capturing_rate): # capturing rate: [Mt-CO2-captured / y]
     cost_of_co2_captured = (annual_cost * 1e6) / (cr * 1e6) # [USD / t-captured]
     return cost_of_co2_captured # [USD / t-captured]
 
-# CO2 transport (compression & piping) # from global CCS, Advancements in CCS Technologies and Costs, 2025
+# CO2 transport (compression & piping) # by global CCS, Advancements in CCS Technologies and Costs, 2025
 
 def co2_compression_capex(capturing_rate, N_train=1): # [Mt-CO2-captured / y]
     Mt = capturing_rate * 1e9 / (plant_data.Plant_operation_time.Value * 3600) # CO2 flow rate [kg /s]
@@ -57,7 +57,45 @@ def co2_pump_capex(capturing_rate): # [Mt-CO2-captured / y]
     capex = 1.11 * 1e6 * (Wp / 1000) * 7e4 * (ppi_us_dict[2023] / ppi_us_dict[2005]) * 1e-6 # [million USD]
     return capex # [million USD]
 
+def co2_compression_power(capturing_rate, i): # capturing_rate: [Mt-CO2-captured / y] i: number of stage
+    m = capturing_rate * 1e6 / (plant_data.Plant_operation_time.Value * 24) # [t/d]
+    R = 8.314 # universal gas constant [kJ / kmol / K]
+    T_in = 308.15 # temperature of CO2 at stage inlet [K] (35℃)
+    M = 44.01 # molecular weight of CO2 [kg / kmol]
+    eta = 0.75 # isentropic efficiency of each stage [-]
+    CR = (73.8 / 1) ** (1 / 8) # compression ratio
+
+    if i == 1:
+        prm = co2_comp_data.S1
+    elif i == 2:
+        prm = co2_comp_data.S2
+    elif i == 3:
+        prm = co2_comp_data.S3
+    elif i == 4:
+        prm = co2_comp_data.S4
+    elif i == 5:
+        prm = co2_comp_data.S5
+    elif i == 6:
+        prm = co2_comp_data.S6
+    elif i == 7:
+        prm = co2_comp_data.S7
+    elif i == 8:
+        prm = co2_comp_data.S8
+    else:
+        raise ValueError("Number of stage is from 1 to 8. Please chech the stage number.")
+    
+    zs = prm.Zs
+    ks = prm.Ks
+    p_in = prm.P_inlet
+    p_out = prm.P_outlet
+
+    Ws = (1000 / (24 * 3600)) * (m * zs * R * T_in / (M * eta)) * (ks / (ks - 1)) * (CR ** ((ks - 1) / ks) - 1) # shaft work (energy) for stage i [kW]
+    return Ws # [kW]
+
 def co2_compression_opex(capturing_rate): # [Mt-CO2-captured / y]
+    Ws_list = [co2_compression_power(capturing_rate, i) for i in range(1, 9)] # [kW]
+
+
 
 def ccs_transport_capex(capturing_rate):
 
