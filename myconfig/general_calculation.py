@@ -47,3 +47,9 @@ def annual_cost_calculation(capex, opex, discount_rate=plant_data.Discount_rate.
     crf = crf_calculation(discount_rate, lifetime)
     annual_cost = capex * crf + opex # [(million) USD / y]
     return annual_cost # [(million) USD / y]
+
+def other_operation_cost(TPC): # total plant cost [million USD]
+    maintenance_cost = TPC * plant_data.Maintenance.Value # [million USD]
+    insurance_cost = TPC * plant_data.Insurance.Value # [million USD]
+    taxes = TPC * plant_data.Taxes.Value # [million USD]
+    return [maintenance_cost, insurance_cost, taxes] # [maintenance_cost, insurance_cost, taxes]

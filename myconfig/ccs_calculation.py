@@ -1,6 +1,6 @@
 from .config import plant_data, cc_data, cc_opex_data, commodity_data, ppi_us_dict, co2_comp_data
 import numpy as np
-from .general_calculation import capex_calculation, annual_cost_calculation, installation_cost
+from .general_calculation import capex_calculation, annual_cost_calculation, installation_cost, other_operation_cost
 from .infra_calculation import dist_pipe_capex, dist_pipe_opex, dist_pipe_cost
 
 #########
@@ -52,11 +52,6 @@ def co2_compression_capex(capturing_rate, N_train=1): # [Mt-CO2-captured / y]
     capex = Mt * N_train * (0.13 * 1e6 * (Mt ** (-0.71)) + 1.40 * 1e6 * (Mt ** (-0.60)) * np.log(P_cut_off / P_initial)) * (PPI_US_2023 / PPI_US_2005) * 1e-6 # [million USD]
     return capex # [million USD]
 
-def co2_pump_capex(capturing_rate): # [Mt-CO2-captured / y]
-    Wp = capturing_rate * 1e6 / (plant_data.Plant_operation_time.Value * 24) # [t/d]
-    capex = 1.11 * 1e6 * (Wp / 1000) * 7e4 * (ppi_us_dict[2023] / ppi_us_dict[2005]) * 1e-6 # [million USD]
-    return capex # [million USD]
-
 def co2_compression_power(capturing_rate, i): # capturing_rate: [Mt-CO2-captured / y] i: number of stage
     m = capturing_rate * 1e6 / (plant_data.Plant_operation_time.Value * 24) # [t/d]
     R = 8.314 # universal gas constant [kJ / kmol / K]
@@ -82,7 +77,7 @@ def co2_compression_power(capturing_rate, i): # capturing_rate: [Mt-CO2-captured
     elif i == 8:
         prm = co2_comp_data.S8
     else:
-        raise ValueError("Number of stage is from 1 to 8. Please chech the stage number.")
+        raise ValueError("Number of stage is fixed (from 1 to 8). Please check the range of number of stages.")
     
     zs = prm.Zs
     ks = prm.Ks
@@ -93,8 +88,18 @@ def co2_compression_power(capturing_rate, i): # capturing_rate: [Mt-CO2-captured
     return Ws # [kW]
 
 def co2_compression_opex(capturing_rate): # [Mt-CO2-captured / y]
-    Ws_list = [co2_compression_power(capturing_rate, i) for i in range(1, 9)] # [kW]
+    cr = capturing_rate # [Mt-CO2-captured / y]
+    Ws_list = [co2_compression_power(cr, i) for i in range(1, 9)] # [kW]
+    electricity_cost = sum([Ws * 3600 * plant_data.Plant_operation_time.Value * commodity_data.Electricity.Value for Ws in Ws_list]) * 1e-6 # [million USD / y]
 
+    other_opex_list  = other_operation_cost(co2_compression_capex(cr)) # [maintenance_cost, insurance_cost, taxes]
+    opex_list = [electricity_cost] + other_opex_list
+    return opex_list # [electricity, maintenance_cost, insurance_cost, taxes]
+
+def co2_pump_capex(capturing_rate): # [Mt-CO2-captured / y]
+    Wp = capturing_rate * 1e6 / (plant_data.Plant_operation_time.Value * 24) # [t/d]
+    capex = 1.11 * 1e6 * (Wp / 1000) * 7e4 * (ppi_us_dict[2023] / ppi_us_dict[2005]) * 1e-6 # [million USD]
+    return capex # [million USD]
 
 
 def ccs_transport_capex(capturing_rate):
