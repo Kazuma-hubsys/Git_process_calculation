@@ -35,7 +35,7 @@ def plot_formatting(axes, x_label="x", y_label="y", title="title"):
             # ax.spines[s].set_linewidth(wid)
     axes_new.get_xaxis().set_tick_params(pad=10)
     axes_new.get_yaxis().set_tick_params(pad=10)
-    axes_new.set_title(title)
+    axes_new.set_title(title, pad=10)
     axes_new.set_xlabel(x_label)
     axes_new.set_ylabel(y_label)
     return axes_new

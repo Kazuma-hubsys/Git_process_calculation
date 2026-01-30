@@ -123,9 +123,9 @@ def ccs_total():
     print(capex)
     # cost_of_CO2 = total_cost * 1e6 / (capturing_rate * 1e6)
     y_list = [capex, opex, total_cost]
-    x_list = ["CAPEX", "OPEX", "Total annual cost"]
+    x_list = ["CAPEX\n[M$]", "OPEX\n[M$/year]", "Total annual cost\n[M$/year]"]
     y_label = "Cost [million USD (/y)]"
-    title = "CCS Cost"
+    title = "CCS Cost of 1.0 Mtpa capturing (without storage)"
     plot_stack_bar(y_list=y_list, x_list=x_list, layer_label_list=layer_label_list, y_label=y_label, title=title)
    
 ccs_total()
