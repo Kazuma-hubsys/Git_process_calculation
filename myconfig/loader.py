@@ -25,14 +25,19 @@ def load_csv(csv_path: str):
     return DotDict(result)
 
 def load_csv_as_dict(csv_path: str):
-    with open(csv_path, encoding='utf-8') as f:
-        data_dict = dict()
-        reader = csv.reader(f)
-        next(reader)
-        for row in reader:
-            key = int(row[0])
-            value = int(row[1])
-            data_dict[key] = value
+    df = pd.read_csv(csv_path, keep_default_na=False, na_values=[''])
+    data_dict = dict()
+    for _, row in df.iterrows():
+        key = row.iloc[0]
+        value = row.iloc[1]
+        # 空白セルはNaNとして保持、それ以外は型変換
+        if pd.isna(value):
+            data_dict[int(key)] = float('nan')
+        else:
+            try:
+                data_dict[int(key)] = int(value)
+            except (ValueError, TypeError):
+                data_dict[int(key)] = value
     return data_dict
 
 # --------------------------------------------------------

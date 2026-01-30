@@ -124,19 +124,19 @@ def biomass_hydrogen_capex_check():
 def co2_compression_pump_check():
     co2_flowrate = np.array([1000, 2500, 5000, 10000, 15000, 20000, 25000]) # [t / d]
     N = np.array([1, 1, 1, 1, 2, 2, 3])
-    co2_flowrate = co2_flowrate * (8000 / 24) * 1e-6 # [Mt / y]
-    comp_capex = co2_compression_capex(co2_flowrate, N)
-    comp_power = co2_compression_power(co2_flowrate)
-    comp_opex = co2_compression_opex(co2_flowrate, N)
-    pump_capex = co2_pump_capex(co2_flowrate)
-    pump_power = co2_pump_power(co2_flowrate)
-    pump_opex = co2_pump_opex(co2_flowrate)
+    cr = co2_flowrate * (8000 / 24) * 1e-6 # [Mt / y]
+    comp_capex = co2_compression_capex(cr, N)
+    # comp_power = co2_compression_power(cr)
+    comp_opex = co2_compression_opex(cr, N)
+    pump_capex = co2_pump_capex(cr)
+    pump_power = co2_pump_power(cr)
+    pump_opex = co2_pump_opex(cr)
 
     print(f"compression capex: {comp_capex}")
-    print(f"compression opex: {comp_opex}")
-    print(f"compression power: {comp_power}")
+    # print(f"compression opex: {comp_opex}")
+    # print(f"compression power: {comp_power}")
     print(f"pump capex: {pump_capex}")
-    print(f"pump_opex: {pump_opex}")
+    # print(f"pump_opex: {pump_opex}")
     print(f"pump power: {pump_power}")
 
 co2_compression_pump_check()

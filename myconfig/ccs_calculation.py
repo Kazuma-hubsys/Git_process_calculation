@@ -1,4 +1,4 @@
-from .config import plant_data, cc_data, cc_opex_data, commodity_data, ppi_us_dict, co2_comp_data
+from .config import plant_data, cc_data, cc_opex_data, commodity_data, ppi_us_dict, cc_comp_data
 import numpy as np
 from .general_calculation import capex_calculation, annual_cost_calculation, installation_cost, other_operation_cost
 from .infra_calculation import dist_pipe_capex, dist_pipe_opex, dist_pipe_cost
@@ -53,7 +53,7 @@ def co2_compression_capex(capturing_rate, N_train=1): # [Mt-CO2-captured / y]
     return capex # [million USD]
 
 def co2_compression_power(capturing_rate, i): # capturing_rate: [Mt-CO2-captured / y] i: number of stage
-    m = capturing_rate * 1e6 / (plant_data.Plant_operation_time.Value * 24) # [t/d]
+    m = capturing_rate * 1e6 / (plant_data.Plant_operation_time.Value / 24) # [t/d]
     R = 8.314 # universal gas constant [kJ / kmol / K]
     T_in = 308.15 # temperature of CO2 at stage inlet [K] (35℃)
     M = 44.01 # molecular weight of CO2 [kg / kmol]
@@ -61,21 +61,21 @@ def co2_compression_power(capturing_rate, i): # capturing_rate: [Mt-CO2-captured
     CR = (73.8 / 1) ** (1 / 8) # compression ratio
 
     if i == 1:
-        prm = co2_comp_data.S1
+        prm = cc_comp_data.S1
     elif i == 2:
-        prm = co2_comp_data.S2
+        prm = cc_comp_data.S2
     elif i == 3:
-        prm = co2_comp_data.S3
+        prm = cc_comp_data.S3
     elif i == 4:
-        prm = co2_comp_data.S4
+        prm = cc_comp_data.S4
     elif i == 5:
-        prm = co2_comp_data.S5
+        prm = cc_comp_data.S5
     elif i == 6:
-        prm = co2_comp_data.S6
+        prm = cc_comp_data.S6
     elif i == 7:
-        prm = co2_comp_data.S7
+        prm = cc_comp_data.S7
     elif i == 8:
-        prm = co2_comp_data.S8
+        prm = cc_comp_data.S8
     else:
         raise ValueError("Number of stage is fixed (from 1 to 8). Please check the range of number of stages.")
     
@@ -95,19 +95,19 @@ def co2_compression_opex(capturing_rate, N_train=1): # [Mt-CO2-captured / y]
     opex_list = [electricity_cost] + other_opex_list
     return opex_list # [million USD / y] # [electricity, maintenance_cost, insurance_cost, taxes]
 
-def co2_pump_capex(capturing_rate): # [Mt-CO2-captured / y]
-    Wp = capturing_rate * 1e6 / (plant_data.Plant_operation_time.Value * 24) # [t/d]
-    capex = 1.11 * 1e6 * (Wp / 1000) * 7e4 * (ppi_us_dict[2023] / ppi_us_dict[2005]) * 1e-6 # [million USD]
-    return capex # [million USD]
-
 def co2_pump_power(capturing_rate): # [Mt-CO2-captured / y]
-    m = capturing_rate * 1e6 / (plant_data.Plant_operation_time.Value * 24) # [t/d]
-    P_final = 150 # pump outlet pressure [MPa]
+    m = capturing_rate * 1e6 / (plant_data.Plant_operation_time.Value / 24) # [t/d]
+    P_final = 150 * 0.1013 # pump outlet pressure [MPa]
     P_cut_off = 73.8 * 0.1013 # pump inlet pressure [MPa] = critical pressure of CO2
     eta = 0.75 # pump efficiency [-]
     rho = 630 # CO2 density [kg/m^3]
     Wp = (1000 * 10) / (24 * 36) * (m * (P_final - P_cut_off) / (rho * eta)) # pump power [kW]
     return Wp # [kW]
+
+def co2_pump_capex(capturing_rate): # [Mt-CO2-captured / y]
+    Wp = co2_pump_power(capturing_rate) # [kW]
+    capex = (1110000 * (Wp / 1000) + 70000) * (ppi_us_dict[2023] / ppi_us_dict[2005]) * 1e-6 # [million USD]
+    return capex # [million USD]
 
 def co2_pump_opex(capturing_rate): # [Mt-CO2-captured / y]                             
     cr = capturing_rate # [Mt-CO2-captured / y]
@@ -126,6 +126,11 @@ def ccs_transport_opex(capturing_rate, L):
     Q = capturing_rate *1e9 / (plant_data.Plant_operation_time.Value * 3600) # [kg-CO2 / s]
     pipe_opex = dist_pipe_opex(Q, L) # [million USD / y]
     return pipe_opex # [million USD]
+
+def ccs_transport_cost(capturing_rate, L):
+    Q = capturing_rate *1e9 / (plant_data.Plant_operation_time.Value * 3600) # [kg-CO2 / s]
+    pipe_cost = dist_pipe_cost(Q, L)  # [million USD / y]
+    return pipe_cost
 
 # storage
 def co2_storage_capex(capturing_rate):
@@ -147,7 +152,7 @@ def ccs_total_cost(capturing_rate, L): # capturing_rate: [Mt-CO2-captured / y], 
     #pipeline
     pipe_capex = ccs_transport_capex(capturing_rate, L) # [million USD]
     pipe_opex = ccs_transport_capex(capturing_rate, L) # [million USD / y]
-    pipe_cost = dist_pipe_cost(Q, L)  # [million USD / y]
+    pipe_cost = ccs_transport_cost(capturing_rate, L)  # [million USD / y]
 
     #storage
     storage_capex = 0 
