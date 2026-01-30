@@ -74,9 +74,9 @@ def plot_line(x, y_list, legend_label=[], x_label="x", y_label="y", title="title
     save_figure(title, save_dir)
     plt.show()
 
-##############
-## Bar plot ##
-##############
+###############
+## Bar chart ##
+###############
 
 def plot_bar(y_list, label_list=[], x_label="", y_label="y", title="title", save_dir="plots"):
     ax = make_ax(x_label, y_label, title)
@@ -89,14 +89,19 @@ def plot_bar(y_list, label_list=[], x_label="", y_label="y", title="title", save
     save_figure(title, save_dir)
     plt.show()
 
-def plot_stack_bar(y_list, label_list=[], x_label="", y_label="y", title="title", save_dir="plots"):
+def plot_stack_bar(y_list, x_list=[], layer_label_list=[], x_label="", y_label="y", title="title", save_dir="plots"):
     ax = make_ax(x_label, y_label, title)
 
-    x = ["Bar" + str(i+1) for i in range(len(y_list))]
-    tick_label = label_list if (len(label_list) == len(y_list)) else x
+    # x_listが提供されていない場合はデフォルト値を使用
+    if len(x_list) == 0:
+        x_list = ["Bar" + str(i+1) for i in range(len(y_list))]
     
     # y_list内の各リストの最大長を取得
     max_len = max(len(y) for y in y_list)
+    
+    # layer_label_listが提供されていない場合はデフォルト値を使用
+    if len(layer_label_list) == 0:
+        layer_label_list = [f"Layer {layer + 1}" for layer in range(max_len)]
     
     # 各段（層）ごとに積み上げ棒をプロット
     bottom = np.zeros(len(y_list))
@@ -107,7 +112,7 @@ def plot_stack_bar(y_list, label_list=[], x_label="", y_label="y", title="title"
                 heights.append(y[layer])
             else:
                 heights.append(0)
-        ax.bar(tick_label, heights, bottom=bottom, label=f"Layer {layer + 1}")
+        ax.bar(x_list, heights, bottom=bottom, label=layer_label_list[layer])
         bottom += np.array(heights)
     
     ax.legend(bbox_to_anchor=(1.01, 0.5), loc="center left", frameon=False)
@@ -159,10 +164,10 @@ if __name__ == "__main__":
     # y_list = [np.sin(x), np.cos(x)]
     # legend_label = ["sin(x)", "cos(x)"]
     # plot_line(x, y_list, legend_label=legend_label)
-    x = np.linspace(- 2 * np.pi, 2 * np.pi, 100)
-    y_list = [np.sin(x)]
-    legend_label = ["sin(x)"]
-    plot_line(x, y_list, legend_label=legend_label)
+    # x = np.linspace(- 2 * np.pi, 2 * np.pi, 100)
+    # y_list = [np.sin(x)]
+    # legend_label = ["sin(x)"]
+    # plot_line(x, y_list, legend_label=legend_label)
 
     # x = np.linspace(- 2 * np.pi, 2 * np.pi, 100)
     # y_list = [np.sin(x), np.cos(x)]
@@ -174,6 +179,6 @@ if __name__ == "__main__":
     # y_list = np.array([5, 3, 7, 4, 6])
     # plot_bar(y_list)
 
-    # # 各barが異なるリストの値を積み上げる
-    # y_list = [[2, 1, 3], [1, 4, 2], [3, 2, 1], [2, 3, 2]]
-    # plot_stack_bar(y_list)
+    # 各barが異なるリストの値を積み上げる
+    y_list = [[2, 1, 3], [1, 4, 2], [3, 2, 1], [2, 3, 2]]
+    plot_stack_bar(y_list, x_list=["a", "b", "c", "d"], layer_label_list=["capex", "opex", "others"], title="Stack bar chart")

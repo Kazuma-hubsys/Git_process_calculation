@@ -26,17 +26,6 @@ def ccs_check():
     y_label = "Cost"
     plot_line(cr, y_list, legend_label=label_list, x_label=x_label, y_label=y_label, title=title)
 
-def ccs_total():
-    capturing_rate = np.linspace(0, 1.5, 50) # [Mt-CO2 captured / y]
-    L = 1.5 # [km] #苫小牧の実証プラントを参照
-    capex, opex, total_cost = ccs_total_cost(capturing_rate, L)
-    cost_of_CO2 = total_cost * 1e6 / (capturing_rate * 1e6)
-    y_list = [capex, opex, total_cost]
-    legend_label = ["CAPEX", "OPEX", "Total annual cost"]
-    x_label, y_label, title = "capturing rate [Mt-CO2/y]", "Cost [million USD (/y)", "Carbon capture and transport cost"
-    plot_line(capturing_rate, y_list, legend_label=legend_label, x_label=x_label, y_label=y_label, title=title)
-    plot_line(capturing_rate, [cost_of_CO2], x_label=x_label, y_label="cost of CO2 [USD / t-CO2]", title="Cost of CO2")
-
 def biomass_infra_check():
     Mw = 58823.5 # [t / y]
     infra_list = bio_trans_infra(Mw) # L, D, S, E, Ews, F, N
@@ -85,18 +74,6 @@ def plot_test_ccs_with_point():
     y_scat = [176]
     plot_line_and_scatter(x, y_list, x_scat, y_scat, legend_label=label_list, x_label=x_label, y_label=y_label, title=title)
 
-def plot_test_ccs_trans():
-    x = np.linspace(0, 100, 100)
-    co2_tonne = x * 3600 * 8000 * 1e-3 * 40
-    y1 = trans_pipe_capex(x) / co2_tonne
-    y2 = dist_pipe_capex(x) / co2_tonne
-    y_list = [y1, y2]
-    label_list = ["Pipe_trans", "Pipe_dist"]
-    x_label = "CO2 flowrate [kg-CO2/s]"
-    y_label = "CAPEX [USD / km / t-CO2]"
-    title = "Pipeline cost per tonne"
-    plot_line(x, y_list, label_list, x_label=x_label, y_label=y_label, title=title)
-
 def steel_ccs(production_rate=100):
     pr = production_rate
     capex = steel_capex_ccs(pr)
@@ -139,4 +116,16 @@ def co2_compression_pump_check():
     # print(f"pump_opex: {pump_opex}")
     print(f"pump power: {pump_power}")
 
-co2_compression_pump_check()
+def ccs_total():
+    capturing_rate = 1.0 # [Mt-CO2 captured / y]
+    L = 1.5 # [km] #苫小牧の実証プラントを参照
+    capex, opex, total_cost, layer_label_list = ccs_total_cost(capturing_rate, L)
+    print(capex)
+    # cost_of_CO2 = total_cost * 1e6 / (capturing_rate * 1e6)
+    y_list = [capex, opex, total_cost]
+    x_list = ["CAPEX", "OPEX", "Total annual cost"]
+    y_label = "Cost [million USD (/y)]"
+    title = "CCS Cost"
+    plot_stack_bar(y_list=y_list, x_list=x_list, layer_label_list=layer_label_list, y_label=y_label, title=title)
+   
+ccs_total()

@@ -32,8 +32,8 @@ from .config import ccs_data_merged
 data_list = ["ccs_data_merged"]
 
 # tool
-from .plotter import plot_line, plot_bar, plot_scatter, plot_line_and_scatter
-tool_list = ["plot_line", "plot_bar", "plot_scatter", "plot_line_and_scatter"]
+from .plotter import plot_line, plot_bar, plot_scatter, plot_line_and_scatter, plot_stack_bar
+tool_list = ["plot_line", "plot_bar", "plot_scatter", "plot_line_and_scatter", "plot_stack_bar"]
 
 cost_calculation_list = general_list + process_list + hydrogen_list + ccs_list + infra_list + biomass_list
 

@@ -90,10 +90,17 @@ def co2_compression_power(capturing_rate, i): # capturing_rate: [Mt-CO2-captured
 def co2_compression_opex(capturing_rate, N_train=1): # [Mt-CO2-captured / y]
     cr = capturing_rate # [Mt-CO2-captured / y]
     Ws_list = [co2_compression_power(cr, i) for i in range(1, 9)] # [kW]
-    electricity_cost = sum([Ws * 3600 * plant_data.Plant_operation_time.Value * commodity_data.Electricity.Value * 1e-6 for Ws in Ws_list]) # [million USD / y]
+    electricity_cost = sum([Ws * plant_data.Plant_operation_time.Value * commodity_data.Electricity.Value * 1e-6 for Ws in Ws_list]) # [million USD / y]
     other_opex_list  = other_operation_cost(co2_compression_capex(cr, N_train)) # [maintenance_cost, insurance_cost, taxes] # [million USD / y]
     opex_list = [electricity_cost] + other_opex_list
     return opex_list # [million USD / y] # [electricity, maintenance_cost, insurance_cost, taxes]
+
+def co2_compression_cost(capturing_rate, N_train=1):  # [Mt-CO2-captured / y]
+    cr = capturing_rate
+    capex = co2_compression_capex(cr, N_train=N_train)
+    opex = sum(co2_compression_opex(cr, N_train=N_train))
+    annual_cost = annual_cost_calculation(capex, opex)
+    return annual_cost
 
 def co2_pump_power(capturing_rate): # [Mt-CO2-captured / y]
     m = capturing_rate * 1e6 / (plant_data.Plant_operation_time.Value / 24) # [t/d]
@@ -112,10 +119,17 @@ def co2_pump_capex(capturing_rate): # [Mt-CO2-captured / y]
 def co2_pump_opex(capturing_rate): # [Mt-CO2-captured / y]                             
     cr = capturing_rate # [Mt-CO2-captured / y]
     Wp = co2_pump_power(cr)
-    electricity_cost = Wp * 3600 * plant_data.Plant_operation_time.Value * commodity_data.Electricity.Value * 1e-6 # [million USD / y]
+    electricity_cost = Wp * plant_data.Plant_operation_time.Value * commodity_data.Electricity.Value * 1e-6 # [million USD / y]
     other_opex_list  = other_operation_cost(co2_pump_capex(cr)) # [maintenance_cost, insurance_cost, taxes] # [million USD / y]
     opex_list = [electricity_cost] + other_opex_list
     return opex_list # [million USD / y] # [electricity, maintenance_cost, insurance_cost, taxes]
+
+def co2_pump_cost(capturing_rate):
+    cr = capturing_rate
+    capex = co2_pump_capex(cr)
+    opex = sum(co2_pump_opex(cr))
+    annual_cost = annual_cost_calculation(capex, opex)
+    return annual_cost
 
 def ccs_transport_capex(capturing_rate, L):
     Q = capturing_rate *1e9 / (plant_data.Plant_operation_time.Value * 3600) # [kg-CO2 / s]
@@ -124,8 +138,8 @@ def ccs_transport_capex(capturing_rate, L):
 
 def ccs_transport_opex(capturing_rate, L):
     Q = capturing_rate *1e9 / (plant_data.Plant_operation_time.Value * 3600) # [kg-CO2 / s]
-    pipe_opex = dist_pipe_opex(Q, L) # [million USD / y]
-    return pipe_opex # [million USD]
+    pipe_opex_list = [dist_pipe_opex(Q, L)] # [million USD / y]
+    return pipe_opex_list # [million USD]
 
 def ccs_transport_cost(capturing_rate, L):
     Q = capturing_rate *1e9 / (plant_data.Plant_operation_time.Value * 3600) # [kg-CO2 / s]
@@ -137,7 +151,8 @@ def co2_storage_capex(capturing_rate):
     return True
 
 def co2_storage_opex(capturing_rate):
-    return True
+    opex = [0]
+    return opex
 
 def co2_storage_cost(capturing_rate):
     return True
@@ -146,22 +161,33 @@ def ccs_total_cost(capturing_rate, L): # capturing_rate: [Mt-CO2-captured / y], 
     # capture
     cr = capturing_rate # [Mt-CO2-captured / y]
     capture_capex = co2_capture_capex(cr) # [million USD]
-    capture_opex_list = co2_capture_opex(cr) # [million USD / y]
+    capture_opex = sum(co2_capture_opex(cr)) # [million USD / y]
     capture_cost = co2_capture_cost(cr) # [million USD / y]
 
-    #pipeline
-    pipe_capex = ccs_transport_capex(capturing_rate, L) # [million USD]
-    pipe_opex = ccs_transport_capex(capturing_rate, L) # [million USD / y]
-    pipe_cost = ccs_transport_cost(capturing_rate, L)  # [million USD / y]
+    # compression
 
-    #storage
+    comp_capex = co2_compression_capex(cr, N_train=1)
+    comp_opex = sum(co2_compression_opex(cr))
+    comp_cost = co2_compression_cost(cr)
+
+    # pumping
+    pump_capex = co2_pump_capex(cr)
+    pump_opex = sum(co2_pump_opex(cr))
+    pump_cost = co2_pump_cost(cr)
+
+    # pipeline
+    pipe_capex = ccs_transport_capex(cr, L) # [million USD]
+    pipe_opex = sum(ccs_transport_opex(cr, L)) # [million USD / y]
+    pipe_cost = ccs_transport_cost(cr, L)  # [million USD / y]
+
+    # storage
     storage_capex = 0 
-    storage_opex = 0
+    storage_opex = sum([0])
     storage_cost = 0
 
     # total
-    total_capex = capture_capex + pipe_capex + storage_capex
-    total_opex = sum(capture_opex_list) + pipe_opex + storage_opex
-    total_cost = capture_cost + pipe_cost + storage_cost
-    ccs_cost_list = [total_capex, total_opex, total_cost]
-    return ccs_cost_list
+    total_capex = [capture_capex, comp_capex, pump_capex, pipe_capex, storage_capex]
+    total_opex = [capture_opex, comp_opex, pump_opex, pipe_opex, storage_opex]
+    total_cost = [capture_cost, comp_cost, pump_cost, pipe_cost, storage_cost]
+    layer_label_list = ["CO2 capture", "CO2 compression", "Pump", "CO2 pipeline", "CO2 storage"]
+    return [total_capex, total_opex, total_cost, layer_label_list]
