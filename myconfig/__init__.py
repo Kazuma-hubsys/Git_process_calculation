@@ -20,8 +20,8 @@ from .hydrogen_calculation import awe_capex, water_pump_capex
 hydrogen_list = ["awe_capex", "water_pump_capex"]
 
 # ccs
-from .ccs_calculation import co2_capture_capex, co2_capture_opex, co2_capture_cost, ccs_cost_check, ccs_total_cost
-ccs_list = ["co2_capture_capex", "co2_capture_opex", "co2_capture_cost", "ccs_cost_check", "ccs_total_cost"]
+from .ccs_calculation import co2_capture_capex, co2_capture_opex, co2_capture_cost, ccs_cost_check, ccs_total_cost, co2_compression_capex, co2_pump_capex, co2_compression_opex, co2_compression_power, co2_pump_power, co2_pump_opex
+ccs_list = ["co2_capture_capex", "co2_capture_opex", "co2_capture_cost", "ccs_cost_check", "ccs_total_cost", "co2_compression_capex", "co2_pump_capex", "co2_compression_opex", "co2_compression_power", "co2_pump_power", "co2_pump_opex"]
 
 # biomass
 from .biomass_calculation import bio_trans_infra, bio_gather_cost, bio_trans_cost, bio_hydrogen_capex

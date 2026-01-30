@@ -87,11 +87,11 @@ def co2_compression_power(capturing_rate, i): # capturing_rate: [Mt-CO2-captured
     Ws = (1000 / (24 * 3600)) * (m * zs * R * T_in / (M * eta)) * (ks / (ks - 1)) * (CR ** ((ks - 1) / ks) - 1) # shaft work (energy) for stage i [kW]
     return Ws # [kW]
 
-def co2_compression_opex(capturing_rate): # [Mt-CO2-captured / y]
+def co2_compression_opex(capturing_rate, N_train=1): # [Mt-CO2-captured / y]
     cr = capturing_rate # [Mt-CO2-captured / y]
     Ws_list = [co2_compression_power(cr, i) for i in range(1, 9)] # [kW]
     electricity_cost = sum([Ws * 3600 * plant_data.Plant_operation_time.Value * commodity_data.Electricity.Value * 1e-6 for Ws in Ws_list]) # [million USD / y]
-    other_opex_list  = other_operation_cost(co2_compression_capex(cr)) # [maintenance_cost, insurance_cost, taxes] # [million USD / y]
+    other_opex_list  = other_operation_cost(co2_compression_capex(cr, N_train)) # [maintenance_cost, insurance_cost, taxes] # [million USD / y]
     opex_list = [electricity_cost] + other_opex_list
     return opex_list # [million USD / y] # [electricity, maintenance_cost, insurance_cost, taxes]
 

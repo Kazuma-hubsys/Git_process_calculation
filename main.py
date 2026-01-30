@@ -2,7 +2,6 @@ from myconfig import *
 import numpy as np
 
 def test():
-    print(f"K1: {equipment_costs.Compressor.K1}")
     print(f"MEA_C0: {ccs_data_merged.MEA.Base_cost}")
     print(f"Electcity cost: {ccs_data_merged.Electricity.Value}")
     print(f"CC capex: {co2_capture_capex(1.2)}")
@@ -122,4 +121,22 @@ def biomass_hydrogen_capex_check():
     title = "CAPEX for hydrogen production from wood chips"
     plot_line_and_scatter(x_list, y_list, x_scat=x_scat, y_scat=y_scat, x_label=x_label, y_label=y_label, title=title)
 
-biomass_hydrogen_capex_check()
+def co2_compression_pump_check():
+    co2_flowrate = np.array([1000, 2500, 5000, 10000, 15000, 20000, 25000]) # [t / d]
+    N = np.array([1, 1, 1, 1, 2, 2, 3])
+    co2_flowrate = co2_flowrate * (8000 / 24) * 1e-6 # [Mt / y]
+    comp_capex = co2_compression_capex(co2_flowrate, N)
+    comp_power = co2_compression_power(co2_flowrate)
+    comp_opex = co2_compression_opex(co2_flowrate, N)
+    pump_capex = co2_pump_capex(co2_flowrate)
+    pump_power = co2_pump_power(co2_flowrate)
+    pump_opex = co2_pump_opex(co2_flowrate)
+
+    print(f"compression capex: {comp_capex}")
+    print(f"compression opex: {comp_opex}")
+    print(f"compression power: {comp_power}")
+    print(f"pump capex: {pump_capex}")
+    print(f"pump_opex: {pump_opex}")
+    print(f"pump power: {pump_power}")
+
+co2_compression_pump_check()
