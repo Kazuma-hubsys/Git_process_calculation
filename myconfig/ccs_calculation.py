@@ -6,6 +6,13 @@ from .infra_calculation import dist_pipe_capex, dist_pipe_opex, dist_pipe_cost
 #########
 ## CCS ##
 #########
+def Mtpa_to_kgCO2ps(capturing_rate): # [Mt-CO2-captured / y]    
+    Q = capturing_rate *1e9 / (plant_data.Plant_operation_time.Value * 3600) # [kg-CO2 / s]
+    return Q
+
+def Mtpa_to_tpd(capturing_rate): #  [Mt-CO2-captured / y]
+    m = capturing_rate * 1e6 / (plant_data.Plant_operation_time.Value / 24) # [t/d]
+    return m # [t/d]
 
 # capture
 def co2_capture_capex(capturing_rate, tec="MEA"): # capturing rate: [Mt-CO2-captured / y, tec: MEA, MDEA etc.
@@ -44,7 +51,7 @@ def ccs_cost_check(capturing_rate): # capturing rate: [Mt-CO2-captured / y]
 # CO2 transport (compression & piping) # by global CCS, Advancements in CCS Technologies and Costs, 2025
 
 def co2_compression_capex(capturing_rate, N_train=1): # [Mt-CO2-captured / y]
-    Mt = capturing_rate * 1e9 / (plant_data.Plant_operation_time.Value * 3600) # CO2 flow rate [kg /s]
+    Mt = Mtpa_to_kgCO2ps(capturing_rate) # CO2 flow rate [kg /s]
     P_cut_off = 73.8 # compressor outlet pressure [bar]
     P_initial = 1.0 # compressor inlet pressure [bar]
     PPI_US_2005 = ppi_us_dict[2005]
@@ -53,7 +60,7 @@ def co2_compression_capex(capturing_rate, N_train=1): # [Mt-CO2-captured / y]
     return capex # [million USD]
 
 def co2_compression_power(capturing_rate, i): # capturing_rate: [Mt-CO2-captured / y] i: number of stage
-    m = capturing_rate * 1e6 / (plant_data.Plant_operation_time.Value / 24) # [t/d]
+    m = Mtpa_to_tpd(capturing_rate) # [t/d]
     R = 8.314 # universal gas constant [kJ / kmol / K]
     T_in = 308.15 # temperature of CO2 at stage inlet [K] (35℃)
     M = 44.01 # molecular weight of CO2 [kg / kmol]
@@ -103,7 +110,7 @@ def co2_compression_cost(capturing_rate, N_train=1):  # [Mt-CO2-captured / y]
     return annual_cost
 
 def co2_pump_power(capturing_rate): # [Mt-CO2-captured / y]
-    m = capturing_rate * 1e6 / (plant_data.Plant_operation_time.Value / 24) # [t/d]
+    m = Mtpa_to_tpd(capturing_rate) # [t/d]
     P_final = 150 * 0.1013 # pump outlet pressure [MPa]
     P_cut_off = 73.8 * 0.1013 # pump inlet pressure [MPa] = critical pressure of CO2
     eta = 0.75 # pump efficiency [-]
@@ -132,7 +139,7 @@ def co2_pump_cost(capturing_rate):
     return annual_cost
 
 def ccs_transport_capex(capturing_rate, L):
-    Q = capturing_rate *1e9 / (plant_data.Plant_operation_time.Value * 3600) # [kg-CO2 / s]
+    Q = Mtpa_to_kgCO2ps(capturing_rate) # [kg-CO2 / s]
     pipe_capex = dist_pipe_capex(Q, L) # [million USD]
     return pipe_capex # [million USD]
 

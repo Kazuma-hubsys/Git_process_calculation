@@ -121,11 +121,22 @@ def ccs_total():
     L = 1.5 # [km] #苫小牧の実証プラントを参照
     capex, opex, total_cost, layer_label_list = ccs_total_cost(capturing_rate, L)
     print(capex)
-    # cost_of_CO2 = total_cost * 1e6 / (capturing_rate * 1e6)
     y_list = [capex, opex, total_cost]
     x_list = ["CAPEX\n[M$]", "OPEX\n[M$/year]", "Total annual cost\n[M$/year]"]
     y_label = "Cost [million USD (/y)]"
     title = "CCS Cost of 1.0 Mtpa capturing (without storage)"
     plot_stack_bar(y_list=y_list, x_list=x_list, layer_label_list=layer_label_list, y_label=y_label, title=title)
-   
-ccs_total()
+
+def ccs_total_comparison():
+    capturing_rate = [0.5, 1.0, 5.0]
+    L = [1.5, 3.0, 10.0]
+    for cr in capturing_rate:
+        for l in L:
+            capex, opex, total_cost, layer_label_list = ccs_total_cost(cr, l)
+            y_list = [capex, opex, total_cost]
+            x_list = ["CAPEX\n[M$]", "OPEX\n[M$/year]", "Total annual cost\n[M$/year]"]
+            y_label = "Cost [million USD (/y)]"
+            title = f"CCS Cost of {cr} Mtpa with {l} km pipeline (without storage)"
+            plot_stack_bar(y_list=y_list, x_list=x_list, layer_label_list=layer_label_list, y_label=y_label, title=title)
+
+ccs_total_comparison()

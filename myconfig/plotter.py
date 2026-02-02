@@ -58,7 +58,7 @@ def save_figure(title, save_dir):
 ## Line plot ##
 ###############
 
-def plot_line(x, y_list, legend_label=[], x_label="x", y_label="y", title="title", save_dir="plots"):
+def plot_line(x, y_list, legend_label=[], x_label="x", y_label="y", title="title", save_dir="plots", y_max=None):
     ax = make_ax(x_label, y_label, title)
     if not legend_label:
         legend_label = [str(i) for i in range(len(y_list))]
@@ -70,6 +70,14 @@ def plot_line(x, y_list, legend_label=[], x_label="x", y_label="y", title="title
     if len(y_list) > 1:
         ax.legend(bbox_to_anchor=(1.01, 0.5), loc="center left", frameon=False)
 
+    # y軸の範囲を設定
+    if y_max is not None:
+        ax.set_ylim(0, y_max)
+    else:
+        all_y = [y for sublist in y_list for y in sublist]
+        max_y = max(all_y)
+        ax.set_ylim(0, max_y * 1.1)
+
     print(f"Plotted: {title}")
     save_figure(title, save_dir)
     plt.show()
@@ -78,18 +86,25 @@ def plot_line(x, y_list, legend_label=[], x_label="x", y_label="y", title="title
 ## Bar chart ##
 ###############
 
-def plot_bar(y_list, label_list=[], x_label="", y_label="y", title="title", save_dir="plots"):
+def plot_bar(y_list, label_list=[], x_label="", y_label="y", title="title", save_dir="plots", y_max=None):
     ax = make_ax(x_label, y_label, title)
 
     x = ["Bar" + str(i+1) for i in range(len(y_list))]
     tick_label = label_list if (len(label_list) == len(y_list)) else x
     ax.bar(tick_label, y_list, tick_label=tick_label)
 
+    # y軸の範囲を設定
+    if y_max is not None:
+        ax.set_ylim(0, y_max)
+    else:
+        max_y = max(y_list)
+        ax.set_ylim(0, max_y * 1.1)
+
     print(f"Plotted: {title}")
     save_figure(title, save_dir)
     plt.show()
 
-def plot_stack_bar(y_list, x_list=[], layer_label_list=[], x_label="", y_label="y", title="title", save_dir="plots"):
+def plot_stack_bar(y_list, x_list=[], layer_label_list=[], x_label="", y_label="y", title="title", save_dir="plots", y_max=None):
     ax = make_ax(x_label, y_label, title)
 
     # x_listが提供されていない場合はデフォルト値を使用
@@ -115,6 +130,13 @@ def plot_stack_bar(y_list, x_list=[], layer_label_list=[], x_label="", y_label="
         ax.bar(x_list, heights, bottom=bottom, label=layer_label_list[layer])
         bottom += np.array(heights)
     
+    # y軸の範囲を設定
+    if y_max is not None:
+        ax.set_ylim(0, y_max)
+    else:
+        max_total = max(bottom)
+        ax.set_ylim(0, max_total * 1.1)
+    
     ax.legend(bbox_to_anchor=(1.01, 0.5), loc="center left", frameon=False)
     print(f"Plotted: {title}")
     save_figure(title, save_dir)
@@ -124,12 +146,19 @@ def plot_stack_bar(y_list, x_list=[], layer_label_list=[], x_label="", y_label="
 ## Scatter plot ##
 ##################
 
-def plot_scatter(x, y, x_label="x", y_label="y", title="title", save_dir="plots"):
+def plot_scatter(x, y, x_label="x", y_label="y", title="title", save_dir="plots", y_max=None):
     ax = make_ax(x_label, y_label, title)
 
     x_list = x
     y_list = y
     ax.scatter(x_list, y_list)
+
+    # y軸の範囲を設定
+    if y_max is not None:
+        ax.set_ylim(0, y_max)
+    else:
+        max_y = max(y_list)
+        ax.set_ylim(0, max_y * 1.1)
 
     print(f"Plotted: {title}")
     save_figure(title, save_dir)
@@ -139,7 +168,7 @@ def plot_scatter(x, y, x_label="x", y_label="y", title="title", save_dir="plots"
 ## Combination plot ##
 ######################
 
-def plot_line_and_scatter(x_list, y_list, x_scat, y_scat, legend_label=[],  x_label="x", y_label="y", title="title", save_dir="plots"):
+def plot_line_and_scatter(x_list, y_list, x_scat, y_scat, legend_label=[],  x_label="x", y_label="y", title="title", save_dir="plots", y_max=None):
     ax = make_ax(x_label, y_label, title)
     if not legend_label:
         legend_label = [str(i) for i in range(len(y_list))]
@@ -153,6 +182,14 @@ def plot_line_and_scatter(x_list, y_list, x_scat, y_scat, legend_label=[],  x_la
     
     if len(y_list) > 1:
         ax.legend(bbox_to_anchor=(1.01, 0.5), loc="center left", frameon=False)
+
+    # y軸の範囲を設定
+    if y_max is not None:
+        ax.set_ylim(0, y_max)
+    else:
+        all_y = [y for sublist in y_list for y in sublist] + list(y_scat)
+        max_y = max(all_y)
+        ax.set_ylim(0, max_y * 1.1)
 
     print(f"Plotted: {title}")
     save_figure(title, save_dir)
