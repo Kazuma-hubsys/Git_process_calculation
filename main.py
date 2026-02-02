@@ -139,4 +139,26 @@ def ccs_total_comparison():
             title = f"CCS Cost of {cr} Mtpa with {l} km pipeline (without storage)"
             plot_stack_bar(y_list=y_list, x_list=x_list, layer_label_list=layer_label_list, y_label=y_label, title=title)
 
-ccs_total_comparison()
+def ccs_total_check():
+    cr = np.linspace(0, 6.0, 50) # [Mt-CO2 captured / y]
+    capex = co2_capture_capex(cr)
+    opex_list = co2_capture_opex(cr)
+    opex = [(opex_list[0][i] + opex_list[1][i] + opex_list[2][i] + opex_list[3][i]) for i in range(len(opex_list[0]))]
+    annual_cost = co2_capture_cost(cr)
+    cocc = ccs_cost_check(cr)
+    y_list = [capex, opex, annual_cost,cocc]
+    label_list = ["CAPEX [million USD]", "OPEX [million USD / y]", "Annual cost [million USD /y]", "Cost of CO2 capture and transport\n[USD / t-CO2]"]
+    # y_list = [annual_cost,cocc]
+    # label_list = ["Annual cost [million USD /y]", "Cost of CO2 capture and transport\n[USD / t-CO2]"]
+ 
+    title = "Cost of CO2 capture and transport"
+    x_label = "Capacity [Mt-CO2 captured / y]"
+    y_label = "Cost"
+    plot_line(cr, y_list, legend_label=label_list, x_label=x_label, y_label=y_label, title=title)
+
+def biomass_gasifier():
+    pr = np.linspace(1, 100, 50) # [kt-H2 / y]
+    capex = bio_hydrogen_capex(pr)
+    plot_line(pr, [capex], x_label="Hydrogen production rate [kt-H2 / yr]", y_label="CAPEX [millin USD]", title="Biomass gasification cost")
+
+biomass_gasifier()

@@ -46,19 +46,19 @@ def make_ax(x_label, y_label, title):
     ax = plot_formatting(ax, x_label, y_label, title)
     return ax
 
-def save_figure(title, save_dir):
+def save_figure(title, save_dir, dpi=300):
     DATA_DIR = Path(__file__).resolve().parent.parent / "DATA"
     plot_dir = DATA_DIR / save_dir
     plot_dir.mkdir(exist_ok=True)
     save_path = plot_dir / f"{title}.png"
     plt.tight_layout()
-    plt.savefig(save_path)
+    plt.savefig(save_path, dpi=dpi)
 
 ###############
 ## Line plot ##
 ###############
 
-def plot_line(x, y_list, legend_label=[], x_label="x", y_label="y", title="title", save_dir="plots", y_max=None):
+def plot_line(x, y_list, legend_label=[], x_label="x", y_label="y", title="title", save_dir="plots", y_max=None, dpi=300):
     ax = make_ax(x_label, y_label, title)
     if not legend_label:
         legend_label = [str(i) for i in range(len(y_list))]
@@ -79,14 +79,14 @@ def plot_line(x, y_list, legend_label=[], x_label="x", y_label="y", title="title
         ax.set_ylim(0, max_y * 1.1)
 
     print(f"Plotted: {title}")
-    save_figure(title, save_dir)
+    save_figure(title, save_dir, dpi)
     plt.show()
 
 ###############
 ## Bar chart ##
 ###############
 
-def plot_bar(y_list, label_list=[], x_label="", y_label="y", title="title", save_dir="plots", y_max=None):
+def plot_bar(y_list, label_list=[], x_label="", y_label="y", title="title", save_dir="plots", y_max=None, dpi=300):
     ax = make_ax(x_label, y_label, title)
 
     x = ["Bar" + str(i+1) for i in range(len(y_list))]
@@ -101,10 +101,10 @@ def plot_bar(y_list, label_list=[], x_label="", y_label="y", title="title", save
         ax.set_ylim(0, max_y * 1.1)
 
     print(f"Plotted: {title}")
-    save_figure(title, save_dir)
+    save_figure(title, save_dir, dpi)
     plt.show()
 
-def plot_stack_bar(y_list, x_list=[], layer_label_list=[], x_label="", y_label="y", title="title", save_dir="plots", y_max=None):
+def plot_stack_bar(y_list, x_list=[], layer_label_list=[], x_label="", y_label="y", title="title", save_dir="plots", y_max=None, dpi=300):
     ax = make_ax(x_label, y_label, title)
 
     # x_listが提供されていない場合はデフォルト値を使用
@@ -139,14 +139,14 @@ def plot_stack_bar(y_list, x_list=[], layer_label_list=[], x_label="", y_label="
     
     ax.legend(bbox_to_anchor=(1.01, 0.5), loc="center left", frameon=False)
     print(f"Plotted: {title}")
-    save_figure(title, save_dir)
+    save_figure(title, save_dir, dpi)
     plt.show()
 
 ##################
 ## Scatter plot ##
 ##################
 
-def plot_scatter(x, y, x_label="x", y_label="y", title="title", save_dir="plots", y_max=None):
+def plot_scatter(x, y, x_label="x", y_label="y", title="title", save_dir="plots", y_max=None, dpi=300):
     ax = make_ax(x_label, y_label, title)
 
     x_list = x
@@ -161,14 +161,14 @@ def plot_scatter(x, y, x_label="x", y_label="y", title="title", save_dir="plots"
         ax.set_ylim(0, max_y * 1.1)
 
     print(f"Plotted: {title}")
-    save_figure(title, save_dir)
+    save_figure(title, save_dir, dpi)
     plt.show()
 
 ######################
 ## Combination plot ##
 ######################
 
-def plot_line_and_scatter(x_list, y_list, x_scat, y_scat, legend_label=[],  x_label="x", y_label="y", title="title", save_dir="plots", y_max=None):
+def plot_line_and_scatter(x_list, y_list, x_scat, y_scat, legend_label=[],  x_label="x", y_label="y", title="title", save_dir="plots", y_max=None, dpi=300):
     ax = make_ax(x_label, y_label, title)
     if not legend_label:
         legend_label = [str(i) for i in range(len(y_list))]
@@ -192,7 +192,7 @@ def plot_line_and_scatter(x_list, y_list, x_scat, y_scat, legend_label=[],  x_la
         ax.set_ylim(0, max_y * 1.1)
 
     print(f"Plotted: {title}")
-    save_figure(title, save_dir)
+    save_figure(title, save_dir, dpi)
     plt.show()
 
 if __name__ == "__main__":
