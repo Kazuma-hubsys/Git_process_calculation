@@ -16,8 +16,8 @@ from .process_steel import steel_capex_bau, steel_capex_dri_eaf, steel_capex_ccs
 process_list = ["steel_capex_bau", "steel_capex_dri_eaf", "steel_capex_ccs", "steel_opex_ccs", "steel_annual_ccs"]
 
 # hydrogen
-from .hydrogen_calculation import awe_capex, water_pump_capex, awe_opex, awe_cost, pemwe_cost, pemwe_capex, pemwe_opex
-hydrogen_list = ["awe_capex", "water_pump_capex", "awe_opex", "awe_cost", "pemwe_cost", "pemwe_capex", "pemwe_opex"]
+from .hydrogen_calculation import awe_capex, water_pump_capex, awe_opex, awe_cost, pemwe_cost, pemwe_capex, pemwe_opex, LCOH_awe, LCOH_pemwe, CAPEX_per_kW_awe, CAPEX_per_kW_pemwe
+hydrogen_list = ["awe_capex", "water_pump_capex", "awe_opex", "awe_cost", "pemwe_cost", "pemwe_capex", "pemwe_opex", "LCOH_pemwe", "LCOH_awe", "CAPEX_per_kW_pemwe", "CAPEX_per_kW_awe"]
 
 # ccs
 from .ccs_calculation import co2_capture_capex, co2_capture_opex, co2_capture_cost, ccs_cost_check, ccs_total_cost, co2_compression_capex, co2_pump_capex, co2_compression_opex, co2_compression_power, co2_pump_power, co2_pump_opex

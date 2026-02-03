@@ -43,7 +43,7 @@ def pemwe_adv_capex(production_scale): # production_scale: [MW]
     return capex_list # [million USD] # [stack, electronics, heat management, compression, contingency]
 
 def electrolizer_opex(production_scale, opex_data, spec_data): # [MW]
-    pr = production_scale / spec_data.Energy_consumption.Value * plant_data.Plant_operation_time.Value # [kg-H2 / yr]
+    pr = production_scale * 1e3 / spec_data.Energy_consumption.Value * plant_data.Plant_operation_time.Value # [kg-H2 / yr]
     electricity_cost = pr * spec_data.Energy_consumption.Value * commodity_data.Electricity.Value * 1e-6 # [milion USD / yr]
     steam_cost = pr * opex_data.Steam.Value * commodity_data.Steam.Value * 1e-6 # [million USD / yr]
     cooling_cost = pr * opex_data.Cooling_water.Value * commodity_data.Cooling_water.Value * 1e-6 # [million USD / yr]
@@ -91,6 +91,36 @@ def pemwe_cost(production_scale, discount_rate=plant_data.Discount_rate.Value): 
     spec_data = pemwe_spec_data
     annual_cost = electrolysis_cost(capex_list, opex_list, spec_data, discount_rate)
     return annual_cost # [million USD / yr]
+
+# LCOH
+
+def LCOH_awe(production_scale): # production scale: [MW], annual cost : [million USD / yr]
+    production_rate = production_scale * 1e3 / awe_spec_data.Energy_consumption.Value * plant_data.Plant_operation_time.Value # [kg-H2 / yr]
+    cost = awe_cost(production_scale) * 1e6 # [USD / yr]
+    lcoh = cost / production_rate # [USD / kg-H2]
+    return lcoh
+
+def LCOH_pemwe(production_scale): # production scale: [MW], annual cost : [million USD / yr]
+    production_rate = production_scale * 1e3 / pemwe_spec_data.Energy_consumption.Value * plant_data.Plant_operation_time.Value # [kg-H2 / yr]
+    cost = pemwe_cost(production_scale) * 1e6 # [USD / yr]
+    lcoh = cost / production_rate # [USD / kg-H2]
+    return lcoh
+
+def CAPEX_per_kW_awe(production_scale): # [MW]
+    capex = sum(awe_capex(production_scale)) * 1e6 # [USD]
+    pr = production_scale * 1e3 # [kW]
+    return capex / pr # [USD / kW]
+
+def CAPEX_per_kW_pemwe(production_scale): # [MW]
+    capex = sum(pemwe_capex(production_scale)) * 1e6 # [USD]
+    pr = production_scale * 1e3 # [kW]
+    return capex / pr # [USD / kW]
+
+def OPEX_per_kW_pemwe(production_scale): # [MW]
+    capex = sum(pemwe_opex(production_scale)) * 1e6 # [USD]
+    pr = production_scale * 1e3 # [kW]
+    return capex / pr # [USD / kW]
+
 
 # infra cost
 

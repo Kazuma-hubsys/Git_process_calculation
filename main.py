@@ -162,23 +162,50 @@ def biomass_gasifier():
     plot_line(pr, [capex], x_label="Hydrogen production rate [kt-H2 / yr]", y_label="CAPEX [millin USD]", title="Biomass gasification cost")
 
 def electrolysis_check():
-    pr = np.array([1, 5, 10, 100])
+    # pr = np.array([1, 5, 10, 100])
+    pr = np.array([5, 10, 100])
     awe_cap = [awe_capex(p) for p in pr]
     awe_op = [awe_opex(p) for p in pr]
     awe_annual_cost = awe_cost(pr)
+    lcoh_awe = LCOH_awe(pr)
+    cap_kw_awe = CAPEX_per_kW_awe(pr)
+    op_kw_awe = [sum(awe_opex(p)) * 1e6 / (p * 1e3) for p in pr]
 
     pem_cap = [pemwe_capex(p) for p in pr]
     pem_op = [pemwe_opex(p) for p in pr]
     pemwe_annual_cost = pemwe_cost(pr)
-    y_list = awe_cap + pem_cap
-    # y_list = awe_op + pem_op
-    # y_list = list(awe_annual_cost) + list(pemwe_annual_cost)
-    x_list = ["AWE\n1 MW", "AWE\n5 MW", "AWE\n10 MW", "AWE\n100 MW", "PEM\n1 MW", "PEM\n5 MW", "PEM\n10 MW", "PEM\n100 MW"]
-    y_label = "CAPEX [million USD / yr]"
-    title = "Electrolysis CAPEX comparison"
+    lcoh_pem = LCOH_pemwe(pr)
+    cap_kw_pem = CAPEX_per_kW_pemwe(pr)
+    op_kw_pem = [sum(pemwe_opex(p)) * 1e6 / (p * 1e3) for p in pr]
 
+    # x_list = ["AWE\n1 MW", "AWE\n5 MW", "AWE\n10 MW", "AWE\n100 MW", "PEM\n1 MW", "PEM\n5 MW", "PEM\n10 MW", "PEM\n100 MW"]
+    x_list = ["AWE\n5 MW", "AWE\n10 MW", "AWE\n100 MW", "PEM\n5 MW", "PEM\n10 MW", "PEM\n100 MW"]
+
+    y_list = awe_cap + pem_cap
+    y_label = "CAPEX [million USD]"
+    title = "Electrolysis CAPEX comparison"
     layer_label_list_capex = ["stack", "electronics", "purification", "heat management", "compression", "contingency"]
-    layer_label_list_opex = ["electricity", "steam", "cooling_water", "refgerant", "pump", "compression", "raw material water"]
     plot_stack_bar(y_list, layer_label_list=layer_label_list_capex, x_list=x_list, y_label=y_label, title=title)
+
+    y_list = list(cap_kw_awe) + list(cap_kw_pem)
+    y_label = "CAPEX [USD / kW]"
+    title = "Electrolysis CAPEX (per kW) comparison"
+    plot_bar(y_list, x_list=x_list, y_label=y_label, title=title)
+
+    y_list = awe_op + pem_op
+    y_label = "OPEX [million USD / yr]"
+    title = "Electrolysis OPEX comparison"
+    layer_label_list_opex = ["electricity", "steam", "cooling_water", "refgerant", "pump", "compression", "raw material water"]
+    plot_stack_bar(y_list, layer_label_list=layer_label_list_opex, x_list=x_list, y_label=y_label, title=title)
+
+    y_list = list(awe_annual_cost) + list(pemwe_annual_cost)
+    y_label = "Annual cost [million USD / yr]"
+    title = "Electrolysis annual cost comparison"
+    plot_bar(y_list, x_list=x_list, y_label=y_label, title=title)
+
+    y_list = list(lcoh_awe) + list(lcoh_pem)
+    y_label = "LCOH [USD / kg-H2]"
+    title = "Electrolysis LCOH comparison"
+    plot_bar(y_list, x_list=x_list, y_label=y_label, title=title)
 
 electrolysis_check()
