@@ -42,8 +42,12 @@ awe_data = load_csv(DATA_DIR / "electrolysis" / "AWE_parameter.csv")
 pemwe_data = load_csv(DATA_DIR / "electrolysis" / "PEMWE_parameter.csv")
 awe_adv_data = load_csv(DATA_DIR / "electrolysis" / "AWE_adv_parameter.csv")
 pemwe_adv_data = load_csv(DATA_DIR / "electrolysis" / "PEMWE_adv_parameter.csv")
+awe_opex_data = load_csv(DATA_DIR / "electrolysis" / "AWE_parameter_opex.csv")
+pemwe_opex_data = load_csv(DATA_DIR / "electrolysis" / "PEMWE_parameter_opex.csv")
+awe_spec_data = load_csv(DATA_DIR / "electrolysis" / "AWE_specification.csv")
+pemwe_spec_data = load_csv(DATA_DIR / "electrolysis" / "PEMWE_specification.csv")
 
-we_data = ["awe_data", "pemwe_data", "awe_adv_data", "pemwe_adv_data"]
+we_data = ["awe_data", "pemwe_data", "awe_adv_data", "pemwe_adv_data", "awe_opex_data", "pemwe_opex_data", "awe_spec_data", "pemwe_spec_data"]
 
 # Biomass
 bio_infra_assump_data = load_csv(DATA_DIR / "biomass" / "biomass_infra_assumption.csv")

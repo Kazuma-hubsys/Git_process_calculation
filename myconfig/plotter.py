@@ -86,11 +86,11 @@ def plot_line(x, y_list, legend_label=[], x_label="x", y_label="y", title="title
 ## Bar chart ##
 ###############
 
-def plot_bar(y_list, label_list=[], x_label="", y_label="y", title="title", save_dir="plots", y_max=None, dpi=300):
+def plot_bar(y_list, x_list=[], x_label="", y_label="y", title="title", save_dir="plots", y_max=None, dpi=300):
     ax = make_ax(x_label, y_label, title)
 
     x = ["Bar" + str(i+1) for i in range(len(y_list))]
-    tick_label = label_list if (len(label_list) == len(y_list)) else x
+    tick_label = x_list if (len(x_list) == len(y_list)) else x
     ax.bar(tick_label, y_list, tick_label=tick_label)
 
     # y軸の範囲を設定

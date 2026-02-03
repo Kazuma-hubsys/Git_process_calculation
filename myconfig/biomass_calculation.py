@@ -82,6 +82,11 @@ def bio_trans_cost(biomass_amount, r=bio_infra_assump_data.r.Value): # L, D, S, 
 
 # processing
 
+# drying & chipping 
+
+"""
+NEDOの実証事業のかなり粗い報告書からデータをとっているから、新しいデータソースが見つかったらそっちに参照する
+"""
 def bio_process_capex(biomass_processing_rate): # [kt-bio / y]
 
     return True

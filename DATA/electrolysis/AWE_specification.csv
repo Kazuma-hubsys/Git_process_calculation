@@ -1,0 +1,7 @@
+Process,Unit,Value,Citation
+Energy_consumption,kWh/kg-H2,49.2,Sota
+Current_density,A/cm^2,1,Sota
+Voltage,V,1.8,Sota
+Operating_pressure,bar,7,Sota
+Stack_lifetime,yr,6.8,Sota
+System_lifetime,yr,20,Sota

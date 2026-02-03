@@ -1,7 +1,7 @@
-from .config import awe_data, awe_adv_data, pemwe_data, pemwe_adv_data, equipment_cost_data
+from .config import awe_data, awe_adv_data, pemwe_data, pemwe_adv_data, equipment_cost_data, awe_opex_data, pemwe_opex_data, plant_data, commodity_data, awe_spec_data, pemwe_spec_data
 import numpy as np
 
-from .general_calculation import capex_calculation, annual_cost_calculation
+from .general_calculation import capex_calculation, crf_calculation
 
 ###############################
 ## Green hydrogen production ##
@@ -9,7 +9,7 @@ from .general_calculation import capex_calculation, annual_cost_calculation
 
 # capex (stack, electronics, purification, heat management, compression, contingency)
 
-def electrolysis_cost(data, production_scale): # production_scale: [MW]
+def electrolysis_capex(data, production_scale): # production_scale: [MW]
     pr = production_scale
     prm_stack = data.Stack_capex
     prm_elec = data.Electronics
@@ -19,29 +19,78 @@ def electrolysis_cost(data, production_scale): # production_scale: [MW]
     prm_cont = data.Contingency
 
     prms = [prm_stack, prm_elec, prm_puri, prm_heat, prm_comp, prm_cont]
-    capex_list = [capex_calculation(prm, pr) for prm in prms]
-    capex_total = sum(capex_list)
-    return capex_total
+    capex_list = [capex_calculation(prm, pr) * 1e-6 for prm in prms] # [million USD]
+    return capex_list # [million USD] # [stack, electronics, heat management, compression, contingency]
 
 def awe_capex(production_scale): # production_scale: [MW]
     data = awe_data
-    capex = electrolysis_cost(data, production_scale) * 1e-6 # [million USD]
-    return capex # [million USD]
+    capex_list = electrolysis_capex(data, production_scale) # [million USD]
+    return capex_list # [million USD] # [stack, electronics, heat management, compression, contingency]
 
 def pemwe_capex(production_scale): # production_scale: [MW]
     data = pemwe_data
-    capex = electrolysis_cost(data, production_scale) * 1e-6 # [million USD]
-    return capex # [million USD]
+    capex_list = electrolysis_capex(data, production_scale) # [million USD]
+    return capex_list # [million USD] # [stack, electronics, heat management, compression, contingency]
 
 def awe_adv_capex(production_scale): # production_scale: [MW]
     data = awe_adv_data
-    capex = electrolysis_cost(data, production_scale) * 1e-6 # [million USD]
-    return capex # [million USD]
+    capex_list = electrolysis_capex(data, production_scale) # [million USD]
+    return capex_list # [million USD] # [stack, electronics, heat management, compression, contingency]
 
 def pemwe_adv_capex(production_scale): # production_scale: [MW]
     data = pemwe_adv_data
-    capex = electrolysis_cost(data, production_scale) * 1e-6 # [million USD]
-    return capex # [million USD]
+    capex_list = electrolysis_capex(data, production_scale) # [million USD]
+    return capex_list # [million USD] # [stack, electronics, heat management, compression, contingency]
+
+def electrolizer_opex(production_scale, opex_data, spec_data): # [MW]
+    pr = production_scale / spec_data.Energy_consumption.Value * plant_data.Plant_operation_time.Value # [kg-H2 / yr]
+    electricity_cost = pr * spec_data.Energy_consumption.Value * commodity_data.Electricity.Value * 1e-6 # [milion USD / yr]
+    steam_cost = pr * opex_data.Steam.Value * commodity_data.Steam.Value * 1e-6 # [million USD / yr]
+    cooling_cost = pr * opex_data.Cooling_water.Value * commodity_data.Cooling_water.Value * 1e-6 # [million USD / yr]
+    refg_cost = pr * opex_data.Refrigerant.Value * commodity_data.Refregerant.Value * 1e-6 # million USD / yr]
+    pump_cost = pr * opex_data.Pump.Value * commodity_data.Electricity.Value * 1e-6 # [million USD / yr]
+    compressor_cost = pr * opex_data.Compression.Value * commodity_data.Electricity.Value * 1e-6 # [million USD / yr]
+    raw_water_cost = pr * opex_data.Water.Value * 1e-3 * commodity_data.Water.Value * 1e-6 # [million USD]
+    opex_list = [electricity_cost, steam_cost, cooling_cost, refg_cost, pump_cost, compressor_cost, raw_water_cost] # [million USD / yr]
+    return opex_list # [million USD / yr] # [electricity, steam, cooling_water, refgerant, pump, compression, raw material water]
+
+def awe_opex(production_scale): #[MW]
+    spec_data = awe_spec_data
+    opex_data = awe_opex_data
+    opex_list = electrolizer_opex(production_scale, opex_data, spec_data)
+    return opex_list # [million USD / yr] # [electricity, steam, cooling_water, refgerant, pump, compression, raw material water]
+
+def pemwe_opex(production_scale): # [MW]
+    spec_data = pemwe_spec_data
+    opex_data = pemwe_opex_data
+    opex_list = electrolizer_opex(production_scale, opex_data, spec_data)
+    return opex_list # [million USD / yr] # [electricity, steam, cooling_water, refgerant, pump, compression, raw material water]
+
+def electrolysis_cost(capex_list, opex_list, spec_data, discount_rate=plant_data.Discount_rate.Value):
+    stack_capex = sum(capex_list[0])
+    stack_lifetime = spec_data.Stack_lifetime.Value # [yr]
+    stack_crf = crf_calculation(discount_rate, stack_lifetime)
+
+    bop_capex = sum(capex_list[1:])
+    bop_lifetime = spec_data.System_lifetime.Value # [yr]
+    bop_crf = crf_calculation(discount_rate, bop_lifetime)
+
+    annual_cost = stack_capex * stack_crf + bop_capex * bop_crf + sum(opex_list)
+    return annual_cost # [million USD / yr]
+
+def awe_cost(production_scale, discount_rate=plant_data.Discount_rate.Value): # [MW]
+    capex_list = awe_capex(production_scale)
+    opex_list = awe_opex(production_scale)
+    spec_data = awe_spec_data
+    annual_cost = electrolysis_cost(capex_list, opex_list, spec_data, discount_rate)
+    return annual_cost # [million USD / yr]
+
+def pemwe_cost(production_scale, discount_rate=plant_data.Discount_rate.Value): # [MW]
+    capex_list = pemwe_capex(production_scale)
+    opex_list = pemwe_opex(production_scale)
+    spec_data = pemwe_spec_data
+    annual_cost = electrolysis_cost(capex_list, opex_list, spec_data, discount_rate)
+    return annual_cost # [million USD / yr]
 
 # infra cost
 

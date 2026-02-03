@@ -1,9 +1,12 @@
-﻿Commodity,Unit,Value,Memo
+﻿Commodity,Unit,Value,Citation
 Natural_gas,$/m^3,0.388,
 Electricity,$/kWh,0.03,
 Water,$/t-water,1.42,
+Cooling_water,$/mmgal,120,Sota
 Heat,$/MJ,0.005,chatGPT
+Steam,$/klb,8.14,Sota
 Labor,$/h,25,
 Fuel,$/L,1,
 Iron_ore,$/t-steel,120,
 Limestone,€_2017/t,21,
+Refregerant,$/klb,0.085,Sota (Freon 12)

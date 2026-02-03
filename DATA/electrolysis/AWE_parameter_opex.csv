@@ -1,0 +1,8 @@
+Process,Unit,Value,Citation
+Steam,klb/kg-H2,0.002688412,Sota
+Cooling_water,mmgal/kg-H2,1.79E-05,Sota
+Refrigerant,klb/kg-H2,0,Sota
+Pump,kWh/kg,0.007715828,Sota
+Compression,kWh/kg,0.798434095,Sota
+Electricity,kWh/kg,49.2,Sota
+Water,kg-water/kg-H2O,9,Stoichiometric_calculation
