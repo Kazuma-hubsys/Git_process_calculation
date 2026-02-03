@@ -197,4 +197,5 @@ def ccs_total_cost(capturing_rate, L): # capturing_rate: [Mt-CO2-captured / y], 
     total_opex = [capture_opex, comp_opex, pump_opex, pipe_opex, storage_opex]
     total_cost = [capture_cost, comp_cost, pump_cost, pipe_cost, storage_cost]
     layer_label_list = ["CO2 capture", "CO2 compression", "Pump", "CO2 pipeline", "CO2 storage"]
-    return [total_capex, total_opex, total_cost, layer_label_list]
+    # return [total_capex, total_opex, total_cost, layer_label_list]
+    return sum(total_cost)

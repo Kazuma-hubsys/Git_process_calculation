@@ -67,7 +67,7 @@ def pemwe_opex(production_scale): # [MW]
     return opex_list # [million USD / yr] # [electricity, steam, cooling_water, refgerant, pump, compression, raw material water]
 
 def electrolysis_cost(capex_list, opex_list, spec_data, discount_rate=plant_data.Discount_rate.Value):
-    stack_capex = sum(capex_list[0])
+    stack_capex = capex_list[0]
     stack_lifetime = spec_data.Stack_lifetime.Value # [yr]
     stack_crf = crf_calculation(discount_rate, stack_lifetime)
 

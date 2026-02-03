@@ -169,14 +169,12 @@ def electrolysis_check():
     awe_annual_cost = awe_cost(pr)
     lcoh_awe = LCOH_awe(pr)
     cap_kw_awe = CAPEX_per_kW_awe(pr)
-    op_kw_awe = [sum(awe_opex(p)) * 1e6 / (p * 1e3) for p in pr]
 
     pem_cap = [pemwe_capex(p) for p in pr]
     pem_op = [pemwe_opex(p) for p in pr]
     pemwe_annual_cost = pemwe_cost(pr)
     lcoh_pem = LCOH_pemwe(pr)
     cap_kw_pem = CAPEX_per_kW_pemwe(pr)
-    op_kw_pem = [sum(pemwe_opex(p)) * 1e6 / (p * 1e3) for p in pr]
 
     # x_list = ["AWE\n1 MW", "AWE\n5 MW", "AWE\n10 MW", "AWE\n100 MW", "PEM\n1 MW", "PEM\n5 MW", "PEM\n10 MW", "PEM\n100 MW"]
     x_list = ["AWE\n5 MW", "AWE\n10 MW", "AWE\n100 MW", "PEM\n5 MW", "PEM\n10 MW", "PEM\n100 MW"]
@@ -208,4 +206,28 @@ def electrolysis_check():
     title = "Electrolysis LCOH comparison"
     plot_bar(y_list, x_list=x_list, y_label=y_label, title=title)
 
-electrolysis_check()
+def tech_comparison():
+    nh3_pr = 0.7 # [Mt-NH3 / yr]
+    co2_emission = nh3_pr * 2.0 # [Mt-CO2 / y], 2.0 t-CO2 / t-NH3 を仮定
+    hydrogen_requirement = nh3_pr * 1e6 / 17 * (3 / 2) * 2  / 8000 * 50 # [MW], 量論比
+    hydrogen_root = awe_cost(hydrogen_requirement) # [million USD / yr]
+    ccs_root = ccs_total_cost(co2_emission, L=1.5) # [million USD / yr]
+    print(f"Hydrogen: {hydrogen_root} mm$/yr ({hydrogen_requirement} MW)")
+    print(f"CCS: {ccs_root} mm$/yr ({co2_emission} Mt-CO2 / yr)")
+
+    nh3_pr = np.linspace(0.1, 1, 50) # [Mt-NH3 / yr]
+    co2_emission = nh3_pr * 2.0 # [Mt-CO2 / y], 2.0 t-CO2 / t-NH3 を仮定
+    hydrogen_requirement = nh3_pr * 1e6 / 17 * (3 / 2) * 2  / 8000 * 50 # [MW], 量論比
+    hydrogen_root = awe_cost(hydrogen_requirement) # [million USD / yr]
+    ccs_root = ccs_total_cost(co2_emission, L=1.5) # [million USD / yr]
+    
+    x = nh3_pr
+    y_list = [hydrogen_root, ccs_root]
+    x_label = "Ammonia production [Mtpa]"
+    y_label = "Additional annual cost [million USD / yr]"
+    title = "Technology comparison (Hydrogen vs CCS)"
+    legend_label = ["Hydrogen", "CCS"]
+
+    plot_line(x, y_list=y_list, x_label=x_label, y_label=y_label, title=title, legend_label=legend_label)
+
+tech_comparison()
