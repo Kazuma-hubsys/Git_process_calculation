@@ -85,6 +85,13 @@ def awe_cost(production_scale, discount_rate=plant_data.Discount_rate.Value): # 
     annual_cost = electrolysis_cost(capex_list, opex_list, spec_data, discount_rate)
     return annual_cost # [million USD / yr]
 
+def awe_adv_cost(production_scale, discount_rate=plant_data.Discount_rate.Value): # [MW]
+    capex_list = awe_adv_capex(production_scale)
+    opex_list = awe_opex(production_scale)
+    spec_data = awe_spec_data
+    annual_cost = electrolysis_cost(capex_list, opex_list, spec_data, discount_rate)
+    return annual_cost # [million USD / yr]
+
 def pemwe_cost(production_scale, discount_rate=plant_data.Discount_rate.Value): # [MW]
     capex_list = pemwe_capex(production_scale)
     opex_list = pemwe_opex(production_scale)

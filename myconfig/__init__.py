@@ -16,16 +16,16 @@ from .process_steel import steel_capex_bau, steel_capex_dri_eaf, steel_capex_ccs
 process_list = ["steel_capex_bau", "steel_capex_dri_eaf", "steel_capex_ccs", "steel_opex_ccs", "steel_annual_ccs"]
 
 # hydrogen
-from .hydrogen_calculation import awe_capex, water_pump_capex, awe_opex, awe_cost, pemwe_cost, pemwe_capex, pemwe_opex, LCOH_awe, LCOH_pemwe, CAPEX_per_kW_awe, CAPEX_per_kW_pemwe
-hydrogen_list = ["awe_capex", "water_pump_capex", "awe_opex", "awe_cost", "pemwe_cost", "pemwe_capex", "pemwe_opex", "LCOH_pemwe", "LCOH_awe", "CAPEX_per_kW_pemwe", "CAPEX_per_kW_awe"]
+from .hydrogen_calculation import awe_capex, water_pump_capex, awe_opex, awe_cost, pemwe_cost, pemwe_capex, pemwe_opex, LCOH_awe, LCOH_pemwe, CAPEX_per_kW_awe, CAPEX_per_kW_pemwe, awe_adv_cost, awe_adv_capex
+hydrogen_list = ["awe_capex", "water_pump_capex", "awe_opex", "awe_cost", "pemwe_cost", "pemwe_capex", "pemwe_opex", "LCOH_pemwe", "LCOH_awe", "CAPEX_per_kW_pemwe", "CAPEX_per_kW_awe", "awe_adv_cost", "awe_adv_capex"]
 
 # ccs
 from .ccs_calculation import co2_capture_capex, co2_capture_opex, co2_capture_cost, ccs_cost_check, ccs_total_cost, co2_compression_capex, co2_pump_capex, co2_compression_opex, co2_compression_power, co2_pump_power, co2_pump_opex
 ccs_list = ["co2_capture_capex", "co2_capture_opex", "co2_capture_cost", "ccs_cost_check", "ccs_total_cost", "co2_compression_capex", "co2_pump_capex", "co2_compression_opex", "co2_compression_power", "co2_pump_power", "co2_pump_opex"]
 
 # biomass
-from .biomass_calculation import bio_trans_infra, bio_gather_cost, bio_trans_cost, bio_hydrogen_capex
-biomass_list = ["bio_trans_infra", "bio_gather_cost", "bio_trans_cost", "bio_hydrogen_capex"]
+from .biomass_calculation import bio_trans_infra, bio_gather_cost, bio_trans_cost, bio_gasif_capex, bio_preprocess_capex, bio_hydrogen_total_cost, bio_price_check
+biomass_list = ["bio_trans_infra", "bio_gather_cost", "bio_trans_cost", "bio_gasif_capex", "bio_preprocess_capex", "bio_hydrogen_total_cost", "bio_price_check"]
 
 # data set
 from .config import ccs_data_merged

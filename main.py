@@ -218,16 +218,106 @@ def tech_comparison():
     nh3_pr = np.linspace(0.1, 1, 50) # [Mt-NH3 / yr]
     co2_emission = nh3_pr * 2.0 # [Mt-CO2 / y], 2.0 t-CO2 / t-NH3 を仮定
     hydrogen_requirement = nh3_pr * 1e6 / 17 * (3 / 2) * 2  / 8000 * 50 # [MW], 量論比
-    hydrogen_root = awe_cost(hydrogen_requirement) # [million USD / yr]
+    hydrogen_root = awe_adv_cost(hydrogen_requirement) # [million USD / yr]
     ccs_root = ccs_total_cost(co2_emission, L=1.5) # [million USD / yr]
     
     x = nh3_pr
     y_list = [hydrogen_root, ccs_root]
     x_label = "Ammonia production [Mtpa]"
     y_label = "Additional annual cost [million USD / yr]"
-    title = "Technology comparison (Hydrogen vs CCS)"
+    title = "Technology comparison (Hydrogen (AWE, adv.feas.) vs CCS (1.5 km pipeline))"
     legend_label = ["Hydrogen", "CCS"]
 
     plot_line(x, y_list=y_list, x_label=x_label, y_label=y_label, title=title, legend_label=legend_label)
 
-tech_comparison()
+def tech_comparison_capex():
+    nh3_pr = np.linspace(0.1, 1, 50) # [Mt-NH3 / yr]
+    co2_emission = nh3_pr * 2.0 # [Mt-CO2 / y], 2.0 t-CO2 / t-NH3 を仮定
+    hydrogen_requirement = nh3_pr * 1e6 / 17 * (3 / 2) * 2  / 8000 * 50 # [MW], 量論比
+    hydrogen_production_rate = nh3_pr / 17 * (3 / 2) * 2 * 1e3 # [kt-H2 / yr]
+
+    hydrogen_root = [sum(awe_capex(hr)) for hr in hydrogen_requirement] # [million USD]
+    hydrogen_adv_root = [sum(awe_adv_capex(hr)) for hr in hydrogen_requirement] # [million USD]
+
+    ccs_root_1p5 = [sum(ccs_total_cost(ce, L = 1.5)[0]) for ce in co2_emission] # [million USD]
+    ccs_root_5 = [sum(ccs_total_cost(ce, L = 5)[0]) for ce in co2_emission] # [million USD]
+    ccs_root_10 = [sum(ccs_total_cost(ce, L = 10)[0]) for ce in co2_emission] # [million USD]
+    ccs_root_30 = [sum(ccs_total_cost(ce, L = 30)[0]) for ce in co2_emission] # [million USD]
+    ccs_root_50 = [sum(ccs_total_cost(ce, L = 50)[0]) for ce in co2_emission] # [million USD]
+
+    biomass_root = [sum(bio_hydrogen_total_cost(hpr)[0]) for hpr in hydrogen_production_rate] # [million USD]
+    
+    x = nh3_pr
+    y_list = [hydrogen_root, hydrogen_adv_root, ccs_root_1p5, ccs_root_5, ccs_root_10, ccs_root_30, ccs_root_50, biomass_root]
+    x_label = "NH3 production rate [Mtpa]"
+    y_label = "Additional CAPEX [million USD]"
+    title = f"Technology comparison in CAPEX (Hydrogen vs CCS vs Biomass)"
+    legend_label = ["Hydrogen", "Hydrogen adv.feas.", "CCS\n(1.5 km pipeline)", "CCS\n(5 km pipeline)", "CCS\n(10 km pipeline)", "CCS\n(30 km pipeline)", "CCS\n(50 km pipeline)", "Biomass"]
+
+    plot_line(x=x, y_list=y_list, legend_label=legend_label, x_label=x_label, y_label=y_label, title=title)
+
+def tech_comparison_capex_stack(nh3_pr=0.01): # [Mt-NH3 / yr] = [Mtpa]
+    co2_emission = nh3_pr * 2.0 # [Mt-CO2 / y], 2.0 t-CO2 / t-NH3 を仮定
+    hydrogen_requirement = nh3_pr * 1e6 / 17 * (3 / 2) * 2  / 8000 * 50 # [MW], 量論比
+    hydrogen_production_rate = nh3_pr / 17 * (3 / 2) * 2 * 1e3 # [kt-H2 / yr]
+
+    hr = hydrogen_requirement # [MW]
+    hydrogen_root = awe_capex(hr) # [million USD]
+    hydrogen_adv_root = awe_adv_capex(hr) # [million USD]
+
+    ce = co2_emission # [Mt-CO2 / y]
+    ccs_root_1p5 = ccs_total_cost(ce, L = 1.5)[0] # [million USD]
+    ccs_root_5 = ccs_total_cost(ce, L = 5)[0] # [million USD]
+    ccs_root_10 = ccs_total_cost(ce, L = 10)[0] # [million USD]
+    ccs_root_30 = ccs_total_cost(ce, L = 30)[0] # [million USD]
+    ccs_root_50 = ccs_total_cost(ce, L = 50)[0] # [million USD]
+
+    hpr = hydrogen_production_rate # [kt-H2 / yr]
+    biomass_root = bio_hydrogen_total_cost(hpr)[0] # [million USD]
+    
+    y_list = [hydrogen_root, hydrogen_adv_root, ccs_root_1p5, ccs_root_5, ccs_root_10, ccs_root_30, ccs_root_50, biomass_root]
+    y_label = "Additional CAPEX [million USD]"
+    title = f"Technology comparison in CAPEX of {nh3_pr * 1e3} Ktpa-NH3 plant"
+    x_label = ["AWE", "AWE\nadv.feas.", "CCS\n1.5 km", "CCS\n5 km", "CCS\n10 km", "CCS\n30 km", "CCS\n50 km", "Biomass\n(wood)"]
+    x = f"\nElectrolysis: {hr:.2f} MW-H2\nCCS: {ce * 1e3} Ktpa-CO2\nBiomass: {hpr:.2f} Ktpa-H2"
+
+    plot_stack_bar(y_list=y_list, x_label=x, x_list=x_label, y_label=y_label, title=title)
+
+def hub_capex_check():
+    x = np.linspace(1, 799999, 300)
+    y = bio_gasif_capex(x)
+    plot_line(x=x, y_list=[y], x_label="Preprocessing capacity [t / yr]", y_label="CAPEX [million USD]", title="Biomass preprocessing CAPEX")
+
+def biomass_total_cost_check(hydrogen_production_rate=50):     # [kt-H2 / yr]
+    capex, opex, total, label = bio_hydrogen_total_cost(hydrogen_production_rate)
+    print(capex)
+    print(opex)
+    print(total)
+    print(label)
+    y_list = [capex, opex, total]
+    x_label = ["CAPEX\n[million USD]", "OPEX\nw/o gasification\n[million USD/yr]", "Annual cost\n[million USD/yr]"]
+    y_label = "Cost"
+    title = f"Biomass cost configuration for {hydrogen_production_rate} Ktpa-H2 production"
+    plot_stack_bar(y_list=y_list, x_list=x_label, layer_label_list=label, y_label=y_label, title=title)
+
+def biomass_price_check(raw_biomass_price=0): # raw biomass price: 0 [USD / kg]
+    biomass_amount = np.linspace(100, 1000, 100) # [t-biomass / yr]
+
+    raw_price = [bio_price_check(ba, raw_biomass_price)[0][0] for ba in biomass_amount] # [USD/ kg]
+    gather_price = [bio_price_check(ba, raw_biomass_price)[0][1] for ba in biomass_amount] # [USD/ kg]
+    trans_price = [bio_price_check(ba, raw_biomass_price)[0][2] for ba in biomass_amount] # [USD/ kg]
+    prepro_price = [bio_price_check(ba, raw_biomass_price)[0][3] for ba in biomass_amount] # [USD/ kg]
+    total_price = [raw_price[i] + gather_price[i] + trans_price[i] + prepro_price[i] for i in range(len(raw_price))] # [USD / kg]
+    label_list = bio_price_check(100, raw_biomass_price)[1]
+
+    
+    
+    x_list = biomass_amount
+    y_list = [raw_price, gather_price, trans_price, prepro_price, total_price]
+    x_label = "Biomass amount [t-biomass / yr]"
+    y_label = "Biomass price [USD / kg]"
+    title = f"Biomass price configuration"
+    legend_label = label_list + ["total price"]
+    plot_line(x=x_list, y_list=y_list, x_label=x_label, y_label=y_label, title=title, legend_label=legend_label)
+
+biomass_price_check(0)

@@ -59,7 +59,6 @@ maize_property_data = load_csv(DATA_DIR / "biomass" / "maize_physical_property.c
 
 biomass_data = ["bio_infra_assump_data", "bio_gather_cost_data", "bio_capex_data", "bio_hydrogen_requirement_data", "wood_property_data", "maize_property_data"]
 
-
 #########
 ## all ##
 #########
